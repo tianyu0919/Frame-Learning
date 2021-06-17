@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="归宿" />
+    <meta name="Keywords" content="关键字" />
+    <script src="/public/js/react.development.js" type="text/javascript"></script>
+    <script src="/public/js/react-dom.development.js" type="text/javascript"></script>
+    <script src="/public/js/babel.min.js" type="text/javascript"></script>
+    <script src="/node_modules/antd/dist/antd.js" type="text/javascript"></script>
+    <link href="/node_modules/antd/dist/antd.css" rel="stylesheet" type="text/css" />
+    <title>网页标题</title>
+</head>
+
+<body>
+    <div id="app"></div>
+</body>
+
+<script type="text/babel">
+    const { useState } = React;
+    const { Button } = antd;
+
+    function MyComponent() {
+        const [n, setN] = useState(0);
+        return (
+            <div>
+                <h1>{n}</h1>
+                <Button type="primary" onClick={() => { setN(n + 1) }}>xx</Button>
+                <button onClick={() => {
+                    setN(n + 1);
+                }}>我是按钮</button>
+            </div>
+        )
+    }
+    ReactDOM.render(<MyComponent />, document.querySelector('#app'));
+</script>
+
+</html>

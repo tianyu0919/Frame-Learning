@@ -1,0 +1,27 @@
+{
+  "name": "learning",
+  "version": "1.0.0",
+  "description": "​\t创建时间 2021年6月17日09:41:44，用于学习一般react、vue、webpack、或者是其他东西。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GuiSud/Frame-Learning.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GuiSud/Frame-Learning/issues"
+  },
+  "homepage": "https://github.com/GuiSud/Frame-Learning#readme",
+  "dependencies": {
+    "create-react-app": "^4.0.3"
+  },
+  "devDependencies": {
+    "antd": "^4.16.3",
+    "webpack": "^5.39.0",
+    "webpack-cli": "^4.7.2"
+  }
+}
