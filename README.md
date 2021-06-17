@@ -2,6 +2,10 @@
 
 ​	创建时间 2021年6月17日09:41:44，用于学习一般react、vue、webpack、或者是其他东西。  
 
+# 项目结构
+
+​	项目里个人文件夹用于存放自己的东西，public用于存放公共文件，例如想要学习React的语法，需要引入React.js、React-dom.js、babel.js等。放在public文件中供大家一起使用。
+
 # git命令
 
 ## 拉取
@@ -24,3 +28,17 @@
 ## 查看当前文件状态
 
 ​	使用 `git status` 来查看当前文件本地环境的状态。
+
+# 学习资料
+
+​	React学习视频：https://www.bilibili.com/video/BV1Ey4y1u7vi?t=907
+
+​	React相关：
+
+1. antDesign库：https://ant.design/docs/react/introduce-cn
+
+2. create-react-app文档：https://create-react-app.dev/
+
+​	Vue相关：
+
+​	webpack：https://webpack.docschina.org/
