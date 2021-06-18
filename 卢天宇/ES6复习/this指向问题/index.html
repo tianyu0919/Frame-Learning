@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="归宿" />
+    <meta name="Keywords" content="关键字" />
+    <title>网页标题</title>
+</head>
+
+<body>
+
+</body>
+
+<script type="text/javascript">
+    /*
+        this 指向的一些常识
+        1. 隐式绑定，一般是谁调用的，this 就是谁
+        2. 默认绑定，如果函数自己执行，那么 this 就是 window，如果是严格模式则是 undefined
+        3. 显示绑定，利用 call apply bind 绑定的函数，重新指定 this 指向这种就是显示绑定
+        
+        优先级关系：
+        显示绑定 > 隐式绑定 > 默认绑定。
+    */
+    // 'use strict'
+    let obj = {
+        a: 1,
+        b() {
+            'use strict'
+            console.log(this?.a);
+        }
+    }
+    var a = 'window';
+
+    // 隐式绑定 (谁调用的)
+    obj.b();
+
+    // 默认绑定 (基本是自己执行的) 全局模式下 this 指向 window，如果是严格模式则是 undefined
+    let c = obj.b;
+    c();
+
+    // 显示绑定
+    let d = obj.b.bind({ a: '我是显示绑定指向this' });
+    d();
+</script>
+
+</html>

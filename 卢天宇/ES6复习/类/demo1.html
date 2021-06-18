@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="归宿" />
+    <meta name="Keywords" content="关键字" />
+    <title>网页标题</title>
+</head>
+
+<body>
+
+</body>
+
+<script type="text/javascript">
+    class Dog {
+        constructor(name, age) {
+            this.name = name;
+            this.age = age;
+            // 当前是隐式绑定 this 指向
+            this.speak = function () {
+                console.log(`我叫${this?.name},我在叫，我是隐式绑定`);
+            }
+
+            // 显示指定 this 将当前渲染时候的 this 强行绑定到 实例上，然后添加到当前实例上的 speakBind 变量上。
+            this.speakBind = function () {
+                console.log(`我叫${this?.name},我在叫，我是显示绑定`);
+            }.bind(this);
+        }
+        cry() {
+            console.log(`我叫${this?.name}，我今年${this?.age}岁了`);
+        }
+        // 箭头函数，自身没有 this 他的 this 是创造他的环境，也就是 Dog 实例化的时候
+        cry1 = () => {
+            console.log(`我叫${this?.name}，我今年${this?.age}岁了，我是箭头函数`);
+        }
+    }
+
+    let dog = new Dog('小花', 15);
+    console.log(dog);
+    dog.cry();
+    dog.speak();
+    dog.speakBind();
+    dog.cry1();
+    console.log("----")
+    let c1 = dog.cry;
+    let c2 = dog.speak;
+    let c3 = dog.speakBind;
+    let c4 = dog.cry1;
+
+    c1();
+    c2();
+    c3();
+    c4();
+</script>
+
+</html>

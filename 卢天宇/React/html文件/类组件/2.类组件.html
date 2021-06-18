@@ -17,7 +17,42 @@
 </head>
 
 <body>
-
+    <div id="app"></div>
 </body>
+
+<script type="text/babel">
+    const { Button } = antd;
+
+    class MyComponent extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = {
+                isHot: true
+            }
+            // 显示绑定this
+            this.hh = function () {
+                const { isHot } = this.state;
+                this.setState({ ...this.state, isHot: !isHot })
+            }.bind(this);
+        }
+        render() {
+            const { isHot } = this.state;
+            return (
+                <div>
+                    <h1>今天天气很{isHot ? '炎热' : '凉爽'}</h1>
+                    <Button type="primary" onClick={this.hh}>切换状态1</Button>
+                    <Button type="primary" onClick={this.changeWeather}>切换状态2changeWeather</Button>
+                </div>
+            )
+        
+        }
+        changeWeather = () => {
+            const { isHot } = this.state;
+            this.setState({ ...this.state, isHot: !isHot })
+        }
+    }
+
+    ReactDOM.render(<MyComponent />, document.querySelector('#app'));
+</script>
 
 </html>
