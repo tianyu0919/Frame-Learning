@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="归宿" />
+    <meta name="Keywords" content="关键字" />
+    <title>网页标题</title>
+</head>
+
+<body>
+
+</body>
+
+<script type="text/javascript">
+    /*
+        私有属性前面加一个 # 号
+        不可以实例.#私有属性，只能使用内部方法调用。
+
+        私有属性不能使用 extends 继承
+        static 静态方法必须使用构造函数调用，且不可以返回静态方法。
+    */
+
+    class Person {
+        #a = 123;
+        constructor(name, age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        static pe1() {
+            return this.#a;
+        }
+
+        static pe2() {
+            return (a) => 11 + a;
+        }
+    }
+
+    class Dog extends Person {
+        #b = 456;
+        // 私有属性
+        constructor(name, age, sex) {
+            super(name, age);
+            this.sex = sex;
+            this.c = this.#b
+        }
+
+        pe() {
+            return this.#b;
+        }
+    }
+
+    var dog = new Dog('小花', 15, '女');
+
+    console.log(dog);
+</script>
+
+</html>

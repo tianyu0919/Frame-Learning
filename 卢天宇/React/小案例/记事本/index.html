@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="归宿" />
+    <meta name="Keywords" content="关键字" />
+    <script src="/public/js/react.production.min.js" type="text/javascript"></script>
+    <script src="/public/js/react-dom.production.min.js" type="text/javascript"></script>
+    <script src="/public/js/babel.min.js" type="text/javascript"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+        type="text/css" />
+    <script src="/node_modules/antd/dist/antd.js" type="text/javascript"></script>
+    <link href="/node_modules/antd/dist/antd.css" rel="stylesheet" type="text/css" />
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #app {
+            padding-top: 20px;
+            box-sizing: border-box;
+        }
+
+        .panel-info .panel-heading {
+            color: #31708f !important;
+            background-color: #d9edf7 !important;
+            border-color: #bce8f1 !important;
+        }
+
+        .panel-info .panel-heading h2 {
+            color: inherit !important;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .panel-footer .el-btn.active {
+            background-color: #409eff;
+            border: 1px solid #409eff;
+            color: white;
+        }
+
+        .panel-body ul {
+            padding-left: 40px;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        .panel-body .item {
+            position: relative;
+            height: 40px;
+            line-height: 40px;
+        }
+
+        .panel-body .removeBtn {
+            position: absolute;
+            right: 0px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .panel-body .btnContainer {
+            position: absolute;
+            right: 0px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .item-content {
+            width: 100%;
+        }
+
+        .btnContainer label.time {
+            margin-bottom: 0px;
+            margin-right: 5px;
+        }
+
+        .panel-footer .btn+.btn {
+            margin-left: 10px;
+        }
+    </style>
+    <title>记事本</title>
+</head>
+
+<body>
+    <div id="app" class="container"></div>
+</body>
+
+<script type="text/babel">
+    const { Input, Button, message, Checkbox } = antd;
+
+    class MyPlain extends React.Component {
+        constructor(props) {
+            super(props);
+            let list = localStorage.getItem('list');
+            this.state = {
+                list: list ? JSON.parse(list) : []
+            }
+        }
+
+        checkChange = (e) => {
+            console.log(e)
+        }
+
+        render() {
+            const { list } = this.state;
+            return (
+                <div className="panel panel-info">
+                    <MyPlainTitle />
+                    <div className="panel-body">
+                        <ul>
+                            {
+                                list.map((v, i) => {
+                                    return <li className="item">
+                                        <Checkbox checked={v.isChecked} onChange={() => {
+                                            let { list } = this.state;
+                                            list.splice(i, 1, { content: v.content, isChecked: !v.isChecked });
+                                            this.setState({ list });
+                                            localStorage.setItem('list', JSON.stringify(list))
+                                        }}>
+                                            {v.content}
+                                        </Checkbox>
+                                    </li>
+                                })
+                            }
+                        </ul>
+
+                        <div className="panel-footer">
+                            <MyPlainBody />
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+    }
+
+    // 头部
+    class MyPlainTitle extends React.Component {
+        constructor(props) {
+            super(props);
+        }
+
+        state = {
+            inputValue: ''
+        }
+
+        submit = (e) => {
+            const { inputValue } = this.state;
+            if (!inputValue) {
+                message.error('当前内容为空不可提交！');
+                return;
+            }
+            this.setState({ inputValue: "" });
+
+            let list = localStorage.getItem('list');
+            list = list ? JSON.parse(list) : [];
+            let item = {
+                content: inputValue,
+                isChecked: false
+            }
+            list.push(item);
+            localStorage.setItem("list", JSON.stringify(list));
+        }
+
+        input = (e) => {
+            this.setState({ inputValue: e.target.value })
+        }
+
+        render() {
+            const { inputValue } = this.state;
+            return (
+                <div className="panel-heading">
+                    <div style={{ "width": "500px", "display": "flex" }}>
+                        <label style={{ "width": "50px", "display": "flex", "justify-content": "center", "align-items": "center" }}>
+                            事件：
+                        </label>
+                        <Input placeholder="请输入想要记录的内容。" allowClear onPressEnter={this.submit} onInput={this.input} value={inputValue} />
+                    </div>
+                    <h2>
+                        还有 <strong>xxx</strong> 件事情没做
+                    </h2>
+                </div>
+            )
+        }
+    }
+
+    // 内容区域
+    class MyPlainBody extends React.Component {
+
+        constructor(props) {
+            super(props);
+        }
+
+        state = {
+            isActive: 0,
+            btnList: [
+                { text: '全部事件' },
+                { text: '已完成' },
+                { text: '未完成' },
+            ]
+        };
+
+        click = (index) => () => {
+            const { isActive } = this.state;
+            this.setState({
+                ...this.state,
+                isActive: index
+            })
+        }
+        render() {
+            const { isActive, btnList } = this.state;
+            return (
+                <div>
+                    {
+                        btnList.map((v, i) => {
+                            return <Button className="btn" key={i} type={isActive == i ? 'primary' : ''} onClick={this.click(i)}>{v.text}</Button>
+                        })
+                    }
+                </div>
+            )
+        }
+    }
+
+    ReactDOM.render(<MyPlain />, document.getElementById('app'));
+</script>
+
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="归宿" />
+    <meta name="Keywords" content="关键字" />
+    <!-- <script src="/public/js/react.development.js" type="text/javascript"></script>
+    <script src="/public/js/react-dom.development.js" type="text/javascript"></script> -->
+    <script src="/public/js/react.production.min.js" type="text/javascript"></script>
+    <script src="/public/js/react-dom.production.min.js" type="text/javascript"></script>
+    <script src="/public/js/babel.min.js" type="text/javascript"></script>
+    <script src="/node_modules/antd/dist/antd.js" type="text/javascript"></script>
+    <link href="/node_modules/antd/dist/antd.css" rel="stylesheet" type="text/css" />
+    <title>网页标题</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        h1 {
+            padding: 10px 0px;
+            box-sizing: border-box;
+        }
+
+        .btnContainer {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .btnContainer .btn:nth-last-of-type(1) {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+</body>
+
+<script type="text/babel">
+    // props 是个只读属性，不可被更改！！！
+
+    const { Button, message } = antd;
+
+    class MyComponent extends React.Component {
+
+        constructor(props) {
+            super(props);
+            this.x = ['卢', '赵', '鲍', '倪'];
+        }
+
+        state = {
+            list: [],
+        };
+
+        random = (params) => {
+            const length = this.x.length;
+            let ren = Math.floor(Math.random() * length);
+            return this[params][ren];
+        };
+
+        plus = () => {
+            const { list } = this.state;
+            list.push({
+                name: this.random('x'),
+                age: Math.floor(Math.random() * 99),
+                sex: Math.random() > 0.5 ? '男' : '女'
+            });
+            this.setState({ list });
+        };
+
+        less = () => {
+            const { list } = this.state;
+            if (!list.length) {
+                message.error({
+                    content: '不能再少了',
+                    duration: 1
+                });
+                return;
+            }
+            list.pop();
+            this.setState({ list });
+        };
+
+        render() {
+            const { list } = this.state;
+            return (
+                <div>
+                    <div className="btnContainer">
+                        <Button className='btn' type="primary" onClick={this.plus}>+</Button>
+                        <Button className='btn' type="primary" disabled={list.length <= 0} onClick={this.less}>-</Button>
+                    </div>
+                    {list.map((v, i) => <List {...v} key={i} />)}
+                </div>
+            )
+        };
+        // 上述代码中的 list 由于当前环境在 react babel 下，所以支持直接展开运算符{ ...v }，不然会报错。
+    }
+
+    class List extends React.PureComponent {
+        render() {
+            const { name, age, sex } = this.props;
+            return (
+                <ul>
+                    <li>我叫：{name}</li>
+                    <li>我{age}岁了</li>
+                    <li>我的性别是{sex}性</li>
+                </ul>
+            )
+        }
+    }
+
+    ReactDOM.render(<MyComponent />, document.querySelector("#app"));
+
+</script>
+
+</html>

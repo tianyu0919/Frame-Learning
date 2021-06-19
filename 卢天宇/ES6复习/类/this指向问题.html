@@ -16,6 +16,11 @@
 </body>
 
 <script type="text/javascript">
+
+    /*
+        * Class 内部的方法会自动加上严格模式。
+    */
+
     class Dog {
         constructor(name, age) {
             this.name = name;
@@ -24,37 +29,46 @@
             this.speak = function () {
                 console.log(`我叫${this?.name},我在叫，我是隐式绑定`);
             }
-
             // 显示指定 this 将当前渲染时候的 this 强行绑定到 实例上，然后添加到当前实例上的 speakBind 变量上。
             this.speakBind = function () {
                 console.log(`我叫${this?.name},我在叫，我是显示绑定`);
             }.bind(this);
         }
+
+        // 会自动跑到实例的原型上
         cry() {
             console.log(`我叫${this?.name}，我今年${this?.age}岁了`);
         }
+
         // 箭头函数，自身没有 this 他的 this 是创造他的环境，也就是 Dog 实例化的时候
         cry1 = () => {
             console.log(`我叫${this?.name}，我今年${this?.age}岁了，我是箭头函数`);
         }
+
+        cry2 = function () {
+            console.log(`我叫${this?.name}，我今年${this?.age}岁了，我是私有绑定的普通函数`);
+        }.bind(this)
     }
 
-    let dog = new Dog('小花', 15);
+    var dog = new Dog('小花', 15);
     console.log(dog);
     dog.cry();
     dog.speak();
     dog.speakBind();
     dog.cry1();
+    dog.cry2();
     console.log("----")
     let c1 = dog.cry;
     let c2 = dog.speak;
     let c3 = dog.speakBind;
     let c4 = dog.cry1;
+    let c5 = dog.cry2;
 
     c1();
     c2();
     c3();
     c4();
+    c5();
 </script>
 
 </html>
