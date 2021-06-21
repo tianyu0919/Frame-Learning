@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="归宿" />
+    <meta name="Keywords" content="关键字" />
+    <title>网页标题</title>
+</head>
+
+<body>
+
+</body>
+
+<script>
+    let obj = {
+        name: 'xxx',
+        a: function () {
+            console.log(this);
+        }
+    }
+
+    obj.a();
+
+    let b = obj.a
+    b();
+
+</script>
+
+</html>

@@ -8,8 +8,9 @@
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <meta name="Author" content="归宿" />
     <meta name="Keywords" content="关键字" />
-    <script src="/public/js/react.production.min.js" type="text/javascript"></script>
-    <script src="/public/js/react-dom.production.min.js" type="text/javascript"></script>
+    <script src="/public/js/react.development.js" type="text/javascript"></script>
+    <script src="/public/js/react-dom.development.js" type="text/javascript"></script>
+    <script src="/public/js/prop-types.min.js" type="text/javascript"></script>
     <script src="/public/js/babel.min.js" type="text/javascript"></script>
     <script src="/node_modules/antd/dist/antd.js" type="text/javascript"></script>
     <link href="/node_modules/antd/dist/antd.css" rel="stylesheet" type="text/css" />
@@ -24,15 +25,47 @@
 
     class Test extends React.Component {
         render() {
+            console.log(this.props)
             return (
                 <div>
-                xx
+                    <h1>我叫{this.props.name}，我今年{this.props.age}岁了</h1>
                 </div>
             )
         }
     }
 
-    ReactDOM.render(<Test />,document.querySelector("#app"));
+    console.log(PropTypes)
+
+    // 设置 propTypes 属性，来指定类型
+    /*
+        1.需要注意的是 组件.propTypes 的p是小写。
+        2.引入一个库，是prop-types库，用来设置React的props类型
+            2.1设置值的时候 PropTypes 注意大小写。
+        类型：
+            optionalArray: PropTypes.array,
+            optionalBool: PropTypes.bool,
+            optionalFunc: PropTypes.func,
+            optionalNumber: PropTypes.number,
+            optionalObject: PropTypes.object,
+            optionalString: PropTypes.string,
+            optionalSymbol: PropTypes.symbol,
+        具体看这里：
+        https://zh-hans.reactjs.org/docs/typechecking-with-proptypes.html#gatsby-focus-wrapper
+    */
+    Test.propTypes = {
+        name: PropTypes.string,
+        age: PropTypes.number
+    }
+
+    // 设置默认值。
+    Test.defaultProps = {
+        name: 'Stranger'
+    };
+
+    const obj = { name: '卢天宇', age: 22 };
+    // const obj = { age: 22 };
+
+    ReactDOM.render(<Test {...obj} />, document.querySelector("#app"));
 </script>
 
 </html>
