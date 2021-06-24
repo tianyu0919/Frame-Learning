@@ -54,6 +54,9 @@
             position: relative;
             height: 40px;
             line-height: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .panel-body .removeBtn {
@@ -82,6 +85,10 @@
         .panel-footer .btn+.btn {
             margin-left: 10px;
         }
+
+        .delBtn {
+            color: red;
+        }
     </style>
     <title>记事本</title>
 </head>
@@ -91,48 +98,129 @@
 </body>
 
 <script type="text/babel">
-    const { Input, Button, message, Checkbox } = antd;
+    const { Input, Button, message, Checkbox, Modal, Tooltip } = antd;
+    const { createElement: e } = React;
 
     class MyPlain extends React.Component {
         constructor(props) {
             super(props);
-            let list = localStorage.getItem('list');
             this.state = {
-                list: list ? JSON.parse(list) : []
-            }
+                list: [],
+                delIndex: null,
+                isModalVisible: false, // 是否显示弹窗
+            };
+            // this.getItem();
         }
 
-        checkChange = (e) => {
-            console.log(e)
+        componentDidMount() {
+            this.getItem();
+        }
+
+        // 获取列表
+        getItem = (toggle = false) => {
+            let list = localStorage.getItem('list');
+            list = list ? JSON.parse(list) : [];
+            if (toggle) {
+                return list;
+            }
+            this.setState({ list })
+        }
+
+        // 替换列表
+        replaceItem = (newList) => {
+            let list = localStorage.getItem('list');
+            list = list ? JSON.parse(list) : [];
+            localStorage.setItem('list', JSON.stringify(newList));
+            this.getItem();
+        }
+
+        checkChange = (i) => () => {
+            let { list } = this.state;
+            const current = list[i];
+            list.splice(i, 1, { content: current.content, isChecked: !current.isChecked });
+            this.setState({ list });
+            localStorage.setItem('list', JSON.stringify(list))
+        }
+
+        submitCallback = (e) => {
+            this.getItem();
+        }
+
+        filter = (type) => {
+            const list = this.getItem(true);
+            let filterData = list;
+            switch (type) {
+                case 'done': {
+                    filterData = list.filter(v => v.isChecked);
+                    break;
+                }
+                case 'notDone': {
+                    filterData = list.filter(v => !v.isChecked);
+                    break;
+                }
+            }
+            this.setState({ list: filterData })
+        }
+
+        delItem = (i) => () => {
+            let list = this.getItem(true);
+            Modal.confirm({
+                title: "提示！",
+                content: e(`p`, null, [e('span', null, '你确定要删除 '), e('b', null, list[i].content), e('span', null, ' 吗？')]),
+                okText: '确认',
+                cancelText: '取消',
+                onOk: () => {
+                    list.splice(i, 1);
+                    this.replaceItem(list);
+                },
+                onCancel() {
+                }
+            })
+            // this.setState({ delIndex: i, isModalVisible: true })
+        }
+
+        handleOk = (e) => {
+            console.log('success:', e)
+        }
+
+        handleCancel = (e) => {
+            console.log('cancel:', e)
+        }
+
+        filterCount = () => {
+            let list = this.getItem(true);
+            let count = list.filter(v => !v.isChecked).length;
+            return count;
         }
 
         render() {
-            const { list } = this.state;
+            const { list, isModalVisible } = this.state;
             return (
                 <div className="panel panel-info">
-                    <MyPlainTitle />
+                    <MyPlainTitle submit={this.submitCallback} count={this.filterCount()} />
                     <div className="panel-body">
                         <ul>
                             {
-                                list.map((v, i) => {
-                                    return <li className="item">
-                                        <Checkbox checked={v.isChecked} onChange={() => {
-                                            let { list } = this.state;
-                                            list.splice(i, 1, { content: v.content, isChecked: !v.isChecked });
-                                            this.setState({ list });
-                                            localStorage.setItem('list', JSON.stringify(list))
-                                        }}>
+                                list.length ? list.map((v, i) =>
+                                    <li className="item">
+                                        <Checkbox checked={v.isChecked} onChange={this.checkChange(i)}>
                                             {v.content}
                                         </Checkbox>
-                                    </li>
-                                })
+                                        <Tooltip placement="right" title="删除">
+                                            <Button onClick={this.delItem(i)} type="primary" size="small" danger class="delBtn">X</Button>
+                                        </Tooltip>
+                                    </li>) : <li className="item">暂无内容</li>
                             }
                         </ul>
 
                         <div className="panel-footer">
-                            <MyPlainBody />
+                            <MyPlainBody filter={this.filter} />
                         </div>
                     </div>
+                    {/* 弹窗 */}
+                    <Modal title="提示！" visible={isModalVisible} onOk={this.handleOk} onCancel={this.handleCancel}>
+                        <p>你确定要删除 <strong></strong> 吗？</p>
+                    </Modal>
                 </div>
             )
         }
@@ -164,25 +252,32 @@
             }
             list.push(item);
             localStorage.setItem("list", JSON.stringify(list));
+            this.props.submit();
         }
 
         input = (e) => {
             this.setState({ inputValue: e.target.value })
         }
 
+        change = (e) => {
+            const { value } = e.target;
+            if (!value) {
+                this.setState({ inputValue: '' })
+            }
+        }
+
         render() {
             const { inputValue } = this.state;
+            const { count } = this.props;
             return (
                 <div className="panel-heading">
                     <div style={{ "width": "500px", "display": "flex" }}>
                         <label style={{ "width": "50px", "display": "flex", "justify-content": "center", "align-items": "center" }}>
                             事件：
                         </label>
-                        <Input placeholder="请输入想要记录的内容。" allowClear onPressEnter={this.submit} onInput={this.input} value={inputValue} />
+                        <Input placeholder="请输入想要记录的内容。" allowClear onPressEnter={this.submit} onChange={this.change} onInput={this.input} value={inputValue} />
                     </div>
-                    <h2>
-                        还有 <strong>xxx</strong> 件事情没做
-                    </h2>
+                    {count > 0 ? e('h2', null, [e('span', null, '还有 '), e('strong', null, count), e('span', null, ' 没做。')]) : e('h2', null, '都完成了^_^')}
                 </div>
             )
         }
@@ -198,26 +293,27 @@
         state = {
             isActive: 0,
             btnList: [
-                { text: '全部事件' },
-                { text: '已完成' },
-                { text: '未完成' },
+                { text: '全部事件', type: "all" },
+                { text: '已完成', type: "done" },
+                { text: '未完成', type: "notDone" },
             ]
         };
 
-        click = (index) => () => {
+        click = (index, type) => () => {
             const { isActive } = this.state;
             this.setState({
-                ...this.state,
                 isActive: index
-            })
+            });
+            this.props.filter(type);
         }
+
         render() {
             const { isActive, btnList } = this.state;
             return (
                 <div>
                     {
                         btnList.map((v, i) => {
-                            return <Button className="btn" key={i} type={isActive == i ? 'primary' : ''} onClick={this.click(i)}>{v.text}</Button>
+                            return <Button className="btn" key={i} type={isActive == i ? 'primary' : ''} onClick={this.click(i, v.type)}>{v.text}</Button>
                         })
                     }
                 </div>

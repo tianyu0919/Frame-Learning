@@ -34,20 +34,15 @@ let progressObj = (function () {
             this.currentSchedule = (progress / this.duration); // 当前进度 0 - 1
             this.currentSchedule = this.currentSchedule > 1 ? 1 : this.currentSchedule; // 因为有可能超出 1 所以，判断一下
             this.frameVal = this.formateVal(this.endVal * this.currentSchedule); // 格式化文字
-            // if ((this.frameVal || this.startVal) < this.endVal) {
-            // this.frameVal = this.formateVal(this.startVal + (this.endVal - this.startVal) * (progress / this.duration));
-            // }
-            // else {
-            //     this.frameVal = this.endVal;
-            // }
             // 如果时间在一定范围内
-            if (progress < this.duration) {
+            if (progress <= this.duration) {
                 this.ref = requestAnimationFrame(arguments.callee.bind(this));
-                this.change ? this.change() : "";
+                this.change ? this.change(this.currentSchedule) : "";
             } else {
                 this.reset();
                 cancelAnimationFrame(this.ref);
-                this.done ? this.done() : "";
+                this.change ? this.change(this.currentSchedule) : "";
+                this.done ? this.done(this) : "";
                 this.frameVal = this.endVal;
             }
             this.setView(this.frameVal);
