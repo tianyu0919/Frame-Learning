@@ -1,5 +1,6 @@
 # 不提交node_moduls 表示注释。
 node_modules
+dist
 # text.txt
 # *.txt 指定所有.txt文件
 
