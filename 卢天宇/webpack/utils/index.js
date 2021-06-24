@@ -33,7 +33,7 @@ let progressObj = (function () {
             // * 比例， 当前时间 / 总时长 表示 0 - 1之前的数量，用最终值乘以这个比例，可以拿到最终想要的结果。
             this.currentSchedule = (progress / this.duration); // 当前进度 0 - 1
             this.currentSchedule = this.currentSchedule > 1 ? 1 : this.currentSchedule; // 因为有可能超出 1 所以，判断一下
-            this.frameVal = this.formateVal((this.startVal + this.endVal) * this.currentSchedule); // 格式化文字
+            this.frameVal = this.formateVal(this.endVal * this.currentSchedule); // 格式化文字
             // if ((this.frameVal || this.startVal) < this.endVal) {
             // this.frameVal = this.formateVal(this.startVal + (this.endVal - this.startVal) * (progress / this.duration));
             // }
