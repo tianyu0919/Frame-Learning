@@ -1,0 +1,100 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+}
+
+#canvas {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    pointer-events: none;
+    background-color: #222;
+    z-index: -1;
+}
+
+.btn-container {
+    padding: 6px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.btn-container .btn + .btn {
+    margin-left: 10px;
+}
+
+.btn-container .sliderBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: inline-block;
+    width: 100px;
+    height: 32px;
+}
+
+.listBox {
+    margin: 0px;
+    max-height: 300px;
+    overflow: auto;
+}
+
+.listBox::-webkit-scrollbar {
+    width: 3px;
+}
+/* 
+.listBox::-webkit-scrollbar-button {
+    background-color: red;
+} */
+.listBox::-webkit-scrollbar-thumb{
+    background-color: #888787;
+    border-radius: 6px;
+    transition: all .3s;
+}
+
+.listBox::-webkit-scrollbar-thumb:hover{
+    background-color: #fff;
+}
+
+.listBox::-webkit-scrollbar-track 
+{
+    background-color: rgba(0, 0, 0, 0.78);
+}
+
+.listBox li {
+    padding: 6px 6px 6px 20px;
+    color: #797979;
+    cursor: pointer;
+    transition: all .3s;
+}
+
+.listBox li:hover {
+    color: #fff;
+}
+
+.listBox .active {
+    color: #fff;
+}
+
+.fileBox {
+    border: 1px solid #888787;
+    background-color: rgba(0, 0, 0, 0.78);
+    margin-left: 6px;
+    width: 200px;
+}
+
+.fileBox .fileTitle {
+    color: #fff;
+    padding: 6px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #888787;
+}
+
+.fileBox+.fileBox {
+    margin-top: 10px;
+}

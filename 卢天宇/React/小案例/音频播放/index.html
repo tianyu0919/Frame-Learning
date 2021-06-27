@@ -1,0 +1,221 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="归宿" />
+    <meta name="Keywords" content="关键字" />
+    <script src="./js/react.production.min.js" type="text/javascript"></script>
+    <script src="./js/react-dom.production.min.js" type="text/javascript"></script>
+    <script src="./js/babel.min.js" type="text/javascript"></script>
+    <script src="./js/antd.js" type="text/javascript"></script>
+    <link href="./css/antd.css" rel="stylesheet" type="text/css" />
+    <link href="./css/index.css" rel="stylesheet" type="text/css" />
+    <script src="./js/index.js" defer="defer" type="text/javascript"></script>
+    <title>音频播放</title>
+</head>
+
+<body>
+    <div id="app"></div>
+</body>
+
+<script type="text/babel">
+    const { Button, message, Slider } = antd;
+    const { Component } = React;
+    const { AudioMap } = window;
+    class Main extends Component {
+        constructor(props) {
+            super(props);
+            // let fileList = localStorage.getItem("fileList");
+            // fileList = fileList ? JSON.parse(fileList) : [];
+            this.state = {
+                audioList: [],
+                fileList: [],
+                playing: false,
+                checkedList: null
+            };
+            this.myRef = React.createRef();
+        }
+
+        static defaultProps = {
+            audioList: [],
+            fileList: []
+        }
+
+        getData = () => {
+            fetch('http://localhost:8888/getList').then(res => res.json()).then(result => {
+                this.setState({
+                    audioList: result
+                })
+                message.success({
+                    content: '获取当前已有数据完成！',
+                    duration: 1
+                })
+            }).catch(err => {
+                console.log(err);
+            })
+        };
+
+        play = () => {
+            const { audioMap } = this.state;
+            audioMap.play(({ state, msg }) => {
+                if (!state) {
+                    message.error({
+                        content: msg,
+                        duration: 1
+                    });
+                    return;
+                }
+                if (state === 2) {
+                    this.setState({ playing: false })
+                    return;
+                }
+                this.setState({ playing: true })
+            });
+        }
+
+        played = () => {
+            const { audioMap } = this.state;
+            message.info({
+                content: `当前音频状态：${audioMap.playing ? '播放中' : '暂停中'}`,
+                duration: 1
+            });
+        }
+
+        timeUpdate = ({ target }) => {
+            const { currentTime } = target;
+        }
+
+        componentWillMount = () => {
+            // 创建实例
+            const audioMap = new AudioMap({
+                delay: 0,
+                timeUpdate: ({ target }) => {
+                    // console.log('当前：' + target.currentTime, '总共：' + target.duration, '比例：' + (target.currentTime / target.duration) * 100);
+                },
+                playDone: (context) => {
+                    message.success({
+                        content: '播放完成！',
+                        duration: 1
+                    })
+                    this.setState({ playing: false })
+                }
+            });
+            this.setState({ audioMap });
+        }
+
+        componentDidMount() {
+            const { audioMap } = this.state;
+            // this.getData();
+        }
+
+        change = () => {
+            const { audioMap } = this.state;
+            audioMap.setSrc('./audio/x.mp3').play(err => {
+                message.error(err);
+            });
+        }
+
+        listClick = (v) => () => {
+            const { audioMap } = this.state;
+            this.setState({ playing: false, checkedList: v });
+            audioMap.setSrc(v.relPath + "/" + v.name);
+            message.success({
+                content: '路径设置成功！',
+                duration: 1
+            })
+        }
+
+        fileListClick = (v) => () => {
+            const { audioMap } = this.state;
+            this.setState({ playing: false, checkedList: v });
+            audioMap.setSrc(v.url);
+            message.success({
+                content: '路径设置成功！',
+                duration: 1
+            })
+        }
+
+        fileClick = (v) => {
+            this.myRef.current.click();
+        }
+
+        fileChange = (ev) => {
+            const { fileList } = this.state;
+            const { target } = ev;
+            const { audioMap } = this.state;
+            const file = target.files[0];
+            const { name, type } = file;
+            console.log(file);
+            if (!type.includes('audio')) {
+                message.error({
+                    content: '请选择mp3音乐文件',
+                    duration: 1
+                });
+                return;
+            }
+            const isFile = fileList.some(v => v.name === name);
+            if (isFile) {
+                message.warning({
+                    content: "已经有了相同的文件！",
+                    duration: 1
+                })
+                return;
+            }
+            let url = URL.createObjectURL(target.files[0]);
+            let fileObj = {
+                name,
+                url
+            }
+            fileList.push(fileObj);
+            this.setState({ fileList })
+            target.value = '';
+            // 因为 URL.createObjectURL(); 关掉页面就不存在了。
+            // localStorage.setItem('fileList', JSON.stringify(fileList));
+        }
+
+        render() {
+            const { audioMap, audioList, playing, checkedList, fileList } = this.state;
+            return (
+                <div>
+                    <div className="btn-container">
+                        <Button className="btn" onClick={this.getData}>请求</Button>
+                        <Button className="btn" onClick={this.play}>{!playing ? "播放音频" : "暂停音乐"}</Button>
+                        <Button className="btn" onClick={this.played}>播放状态</Button>
+                        <Button className="btn" onClick={this.fileClick}>
+                            选择音频文件
+                            <input type="file" style={{ 'display': "none" }} onChange={this.fileChange} ref={this.myRef} />
+                        </Button>
+                        <div className="btn sliderBox">
+                            <Slider max={1} min={0} defaultValue={1} step={0.01} onChange={(value) => { audioMap.setVolume(value) }}></Slider>
+                        </div>
+                        {/* <Button onClick={this.change}>切换歌曲</Button> */}
+                    </div>
+                    {
+                        <div className="fileBox fileBox-list" style={audioList && audioList.length ? { "display": "block" } : { "display": "none" }}>
+                            <div className="fileTitle">接口已有的文件</div>
+                            <ul className="listBox">
+                                {audioList && audioList.map(v => <li className={checkedList === v ? "active" : ""} onClick={this.listClick(v)} data={JSON.stringify(v)}>{v.name}</li>)}
+                            </ul>
+                        </div>
+                    }
+                    {
+                        <div className="fileBox fileBox-list" style={fileList && fileList.length ? { "display": "block" } : { "display": "none" }}>
+                            <div className="fileTitle">本地选择的文件</div>
+                            <ul className="listBox">
+                                {fileList && fileList.map(v => <li className={checkedList === v ? "active" : ""} onClick={this.fileListClick(v)} data={JSON.stringify(v)}>{v.name}</li>)}
+                            </ul>
+                        </div>
+                    }
+                </div>
+            );
+        }
+    }
+
+    ReactDOM.render(<Main />, document.querySelector('#app'));
+</script>
+
+</html>

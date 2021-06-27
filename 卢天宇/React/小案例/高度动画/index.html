@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="归宿" />
+    <meta name="Keywords" content="关键字" />
+    <title>网页标题</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #app {
+            transition: all .3s;
+            padding: 10px;
+            box-sizing: border-box;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            border: 1px solid #e5e5e5;
+            min-height: 40px;
+            width: 100px;
+        }
+
+        #app.hide {
+            height: 0px;
+        }
+
+        #app.animate {
+            animation: ani 1s linear;
+        }
+
+        .btn-container {
+            position: fixed;
+            left: 10px;
+            top: 10px;
+        }
+
+        .btn-container button+button {
+            margin-left: 10px;
+        }
+
+        .xx {
+            display: block;
+            height: 40px;
+            width: 80px;
+            background-color: red;
+        }
+
+        .xx+.xx {
+            margin-top: 10px;
+        }
+
+        @keyframes ani {
+            0% {
+                height: 100px;
+            }
+
+            100% {
+                height: 0px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="btn-container">
+        <button id="add">添加</button>
+        <button id="change">展开/关闭(class)</button>
+        <button id="change1">展开/关闭(动画)</button>
+        <button id="getHeight">获取高度</button>
+    </div>
+    <div id="app"></div>
+</body>
+
+<script type="text/javascript">
+    function el(selector) {
+        return document.querySelector(selector);
+    }
+
+    function addChild(selector, parent, className) {
+        const children = document.createElement(selector);
+        children.classList.add(className);
+        parent.appendChild(children);
+    }
+
+    const box = el('#app');
+
+    el('#add').addEventListener('click', (ev) => {
+        addChild('span', box, 'xx');
+    })
+
+    el('#change').addEventListener('click', (ev) => {
+        box.classList.toggle('hide');
+    })
+
+    el('#change1').addEventListener('click', (ev) => {
+        box.classList.toggle('animate');
+    })
+
+    el('#getHeight').addEventListener('click', (ev) => {
+        console.log(box.scrollHeight);
+        console.log(getComputedStyle(box).height);
+    })
+
+    window.setHeight = setHeight;
+
+    function setHeight() {
+        let ani = null;
+        return function (max, min, dom) {
+            console.log(max,min,dom);
+            if(max >= 20){
+                cancelAnimationFrame(ani);
+            }
+            ani = requestAnimationFrame(arguments.callee, max + 1, min, dom);
+        }
+    }
+</script>
+
+</html>

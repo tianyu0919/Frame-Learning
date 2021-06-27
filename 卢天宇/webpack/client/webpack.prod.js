@@ -4,10 +4,10 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
     mode: "production",
-    entry: path.resolve(__dirname, '../utils/index.js'),
+    entry: path.resolve(__dirname, '../音频可视化/index.js'),
     output: {
         path: path.join(__dirname, '../dist'),
-        filename: 'js/progress.pro.js',
+        filename: 'js/index.pro.js',
         // filename: 'xx.js',
         publicPath: './'
     },

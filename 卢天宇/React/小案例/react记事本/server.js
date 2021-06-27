@@ -8,7 +8,7 @@ const port = 1017;
 http.createServer((req, res) => {
     const { url } = req; // 当前的请求地址
     const paramsUrl = url;
-	res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Origin", "*");
     /**
      * /index
      * /index?a=1
@@ -69,7 +69,7 @@ http.createServer((req, res) => {
                     res.end('文件加载失败');
                     return;
                 }
-				console.log(tempExt.ContentType,extModule[tempExt.ContentType]);
+                console.log(tempExt.ContentType, extModule[tempExt.ContentType]);
                 res.writeHead(200, {
                     "Content-Type": extModule[tempExt.ContentType] || 'text/plain', // 拿到对应类型的返回类型
                     "Cache-Control": "public, max-age=0"
@@ -89,7 +89,7 @@ http.createServer((req, res) => {
         res.writeHead(200, {
             'Content-Type': 'text/html;charset=utf-8'
         });
-		console.log(path.join(__dirname, 'build/index.html'));
+        console.log(path.join(__dirname, 'build/index.html'));
         res.end(fs.readFileSync(path.join(__dirname, 'build/index.html')));
         //res.end("<h2 style='text-align: center'>欢迎来到程序世界！</h2>");
     }
