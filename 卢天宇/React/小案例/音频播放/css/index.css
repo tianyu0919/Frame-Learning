@@ -25,7 +25,7 @@ body {
     align-items: center;
 }
 
-.btn-container .btn + .btn {
+.btn-container .btn+.btn {
     margin-left: 10px;
 }
 
@@ -47,22 +47,22 @@ body {
 .listBox::-webkit-scrollbar {
     width: 3px;
 }
+
 /* 
 .listBox::-webkit-scrollbar-button {
     background-color: red;
 } */
-.listBox::-webkit-scrollbar-thumb{
+.listBox::-webkit-scrollbar-thumb {
     background-color: #888787;
     border-radius: 6px;
     transition: all .3s;
 }
 
-.listBox::-webkit-scrollbar-thumb:hover{
+.listBox::-webkit-scrollbar-thumb:hover {
     background-color: #fff;
 }
 
-.listBox::-webkit-scrollbar-track 
-{
+.listBox::-webkit-scrollbar-track {
     background-color: rgba(0, 0, 0, 0.78);
 }
 
@@ -97,4 +97,15 @@ body {
 
 .fileBox+.fileBox {
     margin-top: 10px;
+}
+
+.line {
+    --durationW: 0px;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    height: 3px;
+    width: var(--durationW);
+    background-color: #ff5200;
+    background-image: linear-gradient(90deg, #9890e3 0%, #b1f4cf 100%);
 }

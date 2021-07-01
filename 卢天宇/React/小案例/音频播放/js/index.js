@@ -4,11 +4,12 @@
         // 默认的行为
         const defaultOptions = {
             delay: 26,
-            timeUpdate: () => { },
-            playDone: () => { }
+            timeUpdate: () => { }, // 视频播放秒发生变化事件
+            playDone: () => { }, // 播放完成事件
+            playInit: () => { }, // 可以播放的时候
         }
 
-        const { timeUpdate, playDone, delay, src } = { ...defaultOptions, ...options };
+        const { timeUpdate, playDone, delay, src, playInit } = { ...defaultOptions, ...options };
 
         // 获取 canvas 的上下文
         const canvasObj = ((delay) => {
@@ -55,6 +56,7 @@
         this.context = audioContext;
         this.playing = false; // 设置没有播放
         this.audio.src = src ? src : 'null';
+        this.playInit = playInit;
 
         this.audio.addEventListener('timeupdate', timeUpdate);
         this.audio.addEventListener('ended', playDone);
@@ -65,7 +67,10 @@
         source.connect(audioContext.destination); // 将目标源连接到出口位置，一般指扬声器。
 
         this.audio.addEventListener('canplay', ({ target }) => {
-            console.log('可以播放', target);
+            const { currentTime, duration } = target;
+            this.playInit(this);
+            this.currentTime = currentTime;
+            this.duration = duration;
             this.canplay = true;
             this.audioCallBack && this.audioCallBack(this);
             this.audioError = false;
@@ -73,7 +78,6 @@
         this.audio.addEventListener('ended', () => {
             this.playing = false;
         });
-
 
         this.audio.addEventListener('error', ({ target }) => {
             this.audioError = true;
@@ -147,7 +151,7 @@
         // * 设置音量
         this.setVolume = (volumeNum) => {
             volumeNum = parseFloat(volumeNum);
-            if(volumeNum>=0 && volumeNum <= 1){
+            if (volumeNum >= 0 && volumeNum <= 1) {
                 this.audio.volume = volumeNum;
             } else {
                 throw Error('音量设置在 0 - 1 之间')
