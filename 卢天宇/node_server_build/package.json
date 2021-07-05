@@ -1,0 +1,16 @@
+{
+  "name": "node_server_build",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bin/www.js",
+  "scripts": {
+    "dev": "nodemon bin/www.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.9"
+  }
+}
