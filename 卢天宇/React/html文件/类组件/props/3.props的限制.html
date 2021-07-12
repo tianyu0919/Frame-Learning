@@ -24,11 +24,24 @@
 <script type="text/babel">
 
     class Test extends React.Component {
+
+        static propTypes = {
+            name: PropTypes.string,
+            age: PropTypes.number,
+            sex: PropTypes.string
+        }
+
+        static defaultProps = {
+            name: 'stranger',
+            age: 10,
+            sex: '男'
+        }
+
         render() {
             console.log(this.props)
             return (
                 <div>
-                    <h1>我叫{this.props.name}，我今年{this.props.age}岁了</h1>
+                    <h1>我叫{this.props.name}，我今年{this.props.age}岁了，性别 {this.props.sex}</h1>
                 </div>
             )
         }
@@ -52,15 +65,15 @@
         具体看这里：
         https://zh-hans.reactjs.org/docs/typechecking-with-proptypes.html#gatsby-focus-wrapper
     */
-    Test.propTypes = {
-        name: PropTypes.string,
-        age: PropTypes.number
-    }
+    // Test.propTypes = {
+    //     name: PropTypes.string,
+    //     age: PropTypes.number
+    // }
 
-    // 设置默认值。
-    Test.defaultProps = {
-        name: 'Stranger'
-    };
+    // // 设置默认值。
+    // Test.defaultProps = {
+    //     name: 'Stranger'
+    // };
 
     const obj = { name: '卢天宇', age: 22 };
     // const obj = { age: 22 };

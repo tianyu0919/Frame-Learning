@@ -8,5 +8,5 @@ const PORT = 9527;
 const server = http.createServer(serverHandler);
 
 server.listen(PORT, () => {
-    console.log(`listening on : http://localhost:${PORT}`);
+    console.log(`listening on : http://localhost:${PORT}/index.html`);
 });

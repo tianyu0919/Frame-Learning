@@ -1,7 +1,7 @@
 {
   "name": "node_server_build",
   "version": "1.0.0",
-  "description": "",
+  "description": "```\r bin \r  |\r  --- www.js // 主文件入口\r app.js // 服务器业务代码\r ```",
   "main": "bin/www.js",
   "scripts": {
     "dev": "nodemon bin/www.js"
@@ -11,6 +11,13 @@
   "license": "ISC",
   "devDependencies": {
     "mysql": "^2.18.1",
-    "nodemon": "^2.0.9"
-  }
+    "nodemon": "^2.0.9",
+    "vue-loader": "^16.3.0",
+    "webpack": "^5.42.1",
+    "webpack-cli": "^4.7.2"
+  },
+  "bin": {
+    "node_server_build": "www.js"
+  },
+  "dependencies": {}
 }

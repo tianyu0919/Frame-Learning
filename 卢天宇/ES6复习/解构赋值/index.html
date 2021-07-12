@@ -27,6 +27,32 @@
     arr1[0].a = 'xxx';
     console.log(arr1, arr2);
 
+    let arr = 'xx';
+    let obj = {
+        xx: 123,
+        bb: 234,
+        arr: 'xxx12',
+        data: {
+            xx: 'xx1'
+        }
+
+    };
+    const { data: { [arr]: data } } = obj;
+    console.log(data);
+    console.log(obj[arr])
+
+    // 手动添加
+    // 187号车位
+    let shoudong = {
+        x: -97.54000091552734,
+        y: 0.7970973253250122,
+        z: -22.594999313354492
+    }
+
+    let zidong = { 
+        x
+    }
+
 </script>
 
 </html>

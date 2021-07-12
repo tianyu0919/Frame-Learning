@@ -4,6 +4,7 @@ const { dbQuery } = require('../../db');
 const HandlerUserInfoRouter = async (req, res) => {
     const { method, path, query } = req;
     if (method === "POST") {
+        // * 添加用户
         if (path === "/api/userInfo/addUser") {
             let data = "";
             req.on("data", (chunk) => {
@@ -30,6 +31,7 @@ const HandlerUserInfoRouter = async (req, res) => {
         }
     }
     if (method === "GET") {
+        // * 获取用户列表
         if (path === "/api/userInfo/getList") {
             let sql = 'select * from userInfo';
             return dbQuery(sql);

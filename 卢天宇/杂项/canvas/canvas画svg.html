@@ -56,13 +56,13 @@
 
     let svg = document.querySelector('svg');
 
-    svg.onload = function () {
-        // new XMLSerializer().serializeToString(svg); // 这是序列化svg，转换成字符串
-        let xml = new XMLSerializer().serializeToString(this);
-        // 拼接src，弄成 base64 格式的。btoa是转换为 base64 格式的
-        let src = `data:image/svg+xml;base64,${btoa(xml)}`;
-        let image = document.createElement('img');
-        image.src = src;
+    // new XMLSerializer().serializeToString(svg); // 这是序列化svg，转换成字符串
+    let xml = new XMLSerializer().serializeToString(svg);
+    // 拼接src，弄成 base64 格式的。btoa是转换为 base64 格式的
+    let src = `data:image/svg+xml;base64,${btoa(xml)}`;
+    let image = document.createElement('img');
+    image.src = src;
+    image.onload = function () {
         ctx.drawImage(image, 0, 0, 150, 150);
     }
 </script>

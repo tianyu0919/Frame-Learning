@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="归宿" />
+    <meta name="Keywords" content="关键字" />
+    <title>网页标题</title>
+</head>
+
+<body>
+    <div>
+        <button id="btn">点击链接</button>
+    </div>
+</body>
+<script>
+    let btn = document.querySelector("#btn");
+    let ws = null;
+    btn.addEventListener("click", (ev) => {
+        if (ws) return;
+        ws = new WebSocket('ws://localhost:8123');
+        ws.onopen = function () {
+            console.log('打开链接了！');
+            ws.send('我丢你好');
+        }
+
+        ws.onclose = () => {
+            console.log('关闭链接了');
+        }
+
+        ws.onmessage = (data) => {
+            console.log('数据传输：', data);
+        }
+    })
+
+</script>
+
+</html>

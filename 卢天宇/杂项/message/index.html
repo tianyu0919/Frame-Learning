@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="归宿" />
+    <meta name="Keywords" content="关键字" />
+    <title>网页标题</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            --btnH: 30px;
+        }
+
+        .btn-container {
+            height: var(--btnH);
+        }
+
+        .iframeBox {
+            height: calc(100vh - var(--btnH));
+            width: 100vw;
+            display: block;
+        }
+
+        iframe{ 
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="btn-container">
+        <button id="in">进入停车场</button>
+        <button id="back">返回</button>
+    </div>
+    <div class="iframeBox">
+        <iframe name="iframe" src="http://localhost:8081" frameborder="0"></iframe>
+    </div>
+</body>
+
+<script type="text/javascript">
+    function el(selector) {
+        return document.querySelector(selector);
+    }
+
+    let btnIn = el('#in');
+    let btnBack = el('#back');
+    let ifm = el('.iframeBox')
+
+    const contentWindow = window.frames['iframe'];
+
+    btnIn.addEventListener('click', (ev) => {
+        console.log(contentWindow)
+        console.log(ifm, ifm.contentWindow);
+        contentWindow.postMessage({ type: 'changeScene', targetName: "车辆管理", value: true }, "*");
+        contentWindow.postMessage({ type: 'app', targetName: "停车场", value: true }, "*");
+    })
+
+    window.addEventListener('message', ({ data }) => {
+        console.log('我是父亲', data);
+    })
+</script>
+
+</html>

@@ -9,6 +9,13 @@
             "name": "音频可视化",
             "port": 8888,
             "program": "${workspaceFolder}/卢天宇/React/小案例/音频播放/server.js"
+        }, {
+            "type": "node",
+            "request": "launch",
+            "name": "nodeServer",
+            "restart": true,
+            "port": 9527,
+            "program": "${workspaceFolder}/卢天宇/node_server_build/bin/www.js"
         },
         {
             "type": "pwa-chrome",
