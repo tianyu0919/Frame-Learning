@@ -22,19 +22,19 @@
 
 <script type="text/babel">
     /*
-        React 提出的 第一种 refs形式，最好不用。
+        React 提出的 第二种 refs形式。
     */
     class Root extends React.Component {
         render() {
             return (
                 <div>
-                    <input type="text" ref="input1" onChange={this.input1} />
+                    <input type="text" ref={c => this.input1 = c} onChange={this.input1} />
                 </div>
             );
         }
 
         input1 = (event) => {
-            const { value } = this.refs.input1;
+            const { value } = this.input1;
             console.log(value);
         }
     }

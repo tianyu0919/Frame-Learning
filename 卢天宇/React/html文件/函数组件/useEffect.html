@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="归宿" />
+    <meta name="Keywords" content="关键字" />
+    <script src="/public/js/react.development.js" type="text/javascript"></script>
+    <script src="/public/js/react-dom.development.js" type="text/javascript"></script>
+    <script src="/public/js/babel.min.js" type="text/javascript"></script>
+    <script src="/node_modules/antd/dist/antd.js" type="text/javascript"></script>
+    <link href="/node_modules/antd/dist/antd.css" rel="stylesheet" type="text/css" />
+    <title>网页标题</title>
+</head>
+
+<body>
+    <div id="root"></div>
+</body>
+
+<script type="text/babel">
+
+    /* 
+        注意 useState 不会像 class 中 setState 一样，useState 会替换掉以前的值， setState 会合并。
+        useEffect 可以使函数式组件使用生命钩子，默认执行 类似于 componentDidMount 和 componentDidUpdate，如果有返回方法，则销毁的时候执行该返回方法
+    */
+
+    const { useState, useEffect } = React;
+
+    function Root() {
+        let [userInfo, setUserInfo] = useState({
+            name: '卢天宇',
+            age: 10
+        })
+
+        useEffect(() => {
+            console.log('执行 componentDidMount 和 componentDidUpdate 生命钩子');
+            return () => {
+                console.log('销回时，执行了 该方法，类似于 componentWillUnmount');
+            }
+        })
+
+        return (
+            <div>
+                <button onClick={() => { setUserInfo({ ...userInfo, age: Math.random() * 100 }) }}>修改</button>
+                我是{userInfo.name}, 我今年{userInfo.age} 岁了。
+            </div >
+        )
+    }
+
+    ReactDOM.render(<Root />, document.querySelector('#root'));
+
+</script>
+
+</html>

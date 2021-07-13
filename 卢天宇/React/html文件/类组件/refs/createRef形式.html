@@ -22,19 +22,28 @@
 
 <script type="text/babel">
     /*
-        React 提出的 第一种 refs形式，最好不用。
+        React 提出的 第三种 refs形式。
     */
     class Root extends React.Component {
+        constructor(props) {
+            super();
+            // 如果这里不用 this.props，则不用 super 传props。
+        }
+
+        componentWillMount() {
+            this.dom = React.createRef();
+        }
+
         render() {
             return (
                 <div>
-                    <input type="text" ref="input1" onChange={this.input1} />
+                    <input type="text" ref={this.dom} onChange={this.input1} />
                 </div>
             );
         }
 
         input1 = (event) => {
-            const { value } = this.refs.input1;
+            const { value } = this.dom.current;
             console.log(value);
         }
     }

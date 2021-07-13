@@ -10,6 +10,7 @@
     <meta name="Keywords" content="关键字" />
     <script src="/public/js/react.development.js" type="text/javascript"></script>
     <script src="/public/js/react-dom.development.js" type="text/javascript"></script>
+    <script src="/public/js/prop-types.min.js" type="text/javascript"></script>
     <script src="/public/js/babel.min.js" type="text/javascript"></script>
     <script src="/node_modules/antd/dist/antd.js" type="text/javascript"></script>
     <link href="/node_modules/antd/dist/antd.css" rel="stylesheet" type="text/css" />
@@ -17,29 +18,27 @@
 </head>
 
 <body>
-    <div id="root"></div>
+    <div id="app"></div>
 </body>
 
 <script type="text/babel">
-    /*
-        React 提出的 第一种 refs形式，最好不用。
-    */
-    class Root extends React.Component {
+
+    class Test extends React.Component {
+        constructor(props) {
+            super();
+            // 如果不需要在此处写 this.props 则不需要往 super 里面传参。直接调用 super 就可以。
+        }
         render() {
+            console.log(this.props)
             return (
                 <div>
-                    <input type="text" ref="input1" onChange={this.input1} />
+                    <h1>我叫{this.props.name}，我今年{this.props.age}岁了，性别 {this.props.sex}</h1>
                 </div>
-            );
-        }
-
-        input1 = (event) => {
-            const { value } = this.refs.input1;
-            console.log(value);
+            )
         }
     }
 
-    ReactDOM.render(<Root />, document.querySelector('#root'));
+    ReactDOM.render(<Test {...obj} />, document.querySelector("#app"));
 </script>
 
 </html>
