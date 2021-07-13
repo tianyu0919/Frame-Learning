@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="归宿" />
+    <meta name="Keywords" content="关键字" />
+    <title>网页标题</title>
+</head>
+
+<body>
+    <div>
+        <label>时间：单位s</label>
+        <input type="text" id="timeValue" value='1' />
+        <labe style="margin-left: 10px;">小数点</labe>
+        <input type="text" id="decPlaValue" value='0' />
+        <labe style="margin-left: 10px;">最终值：</labe>
+        <input type="text" id="endValue" value='9527' />
+    </div>
+    <h2 id="text">0</h2>
+    <h2 id="text1">0</h2>
+    <button id="btn-count">0</button>
+    <input type="text" id="input-text" value='0' />
+    <button id="btn">开始</button>
+</body>
+
+<script type="text/javascript">
+
+    function el(selector) {
+        return document.querySelector(selector);
+    }
+
+    function init(els, endVal, options) {
+        // 默认配置
+        let defaultOptions = {
+            startValue: 0,
+            duration: 2, // 默认时长
+            decPla: 0, // 显示小数点几位
+        }
+
+        const _this = this;
+        this.options = { ...defaultOptions, ...options };
+        const { startValue, decPla, done, change } = this.options;
+        this.el = els;
+        this.startVal = parseFloat(startValue); // 开始值
+        this.decPla = parseFloat(decPla); // 小数点位
+        this.endVal = parseFloat(endVal); // 结束值
+        this.done = done; // 完成的时候
+        this.change = change; // 修改的时候
+
+        this.start = function () {
+            this.ref = requestAnimationFrame(this.count.bind(this));
+        }
+
+        this.count = function (timestamp) {
+            if (!this._startTime) {
+                this._startTime = timestamp;
+            }
+            // * progress = newTIme - firstTIme
+            let progress = timestamp - this._startTime;
+            // * 比例， 当前时间 / 总时长 表示 0 - 1之前的数量，用最终值乘以这个比例，可以拿到最终想要的结果。
+            this.currentSchedule = (progress / this.duration); // 当前进度 0 - 1
+            this.currentSchedule = this.currentSchedule > 1 ? 1 : this.currentSchedule; // 因为有可能超出 1 所以，判断一下
+            this.frameVal = this.formateVal(this.endVal * this.currentSchedule); // 格式化文字
+            // if ((this.frameVal || this.startVal) < this.endVal) {
+            // this.frameVal = this.formateVal(this.startVal + (this.endVal - this.startVal) * (progress / this.duration));
+            // }
+            // else {
+            //     this.frameVal = this.endVal;
+            // }
+            // 如果时间在一定范围内
+            if (progress < this.duration) {
+                this.ref = requestAnimationFrame(arguments.callee.bind(this));
+                this.change ? this.change() : "";
+            } else {
+                this.reset();
+                cancelAnimationFrame(this.ref);
+                this.done ? this.done() : "";
+                this.frameVal = this.endVal;
+            }
+            this.setView(this.frameVal);
+        }
+
+        this.formateVal = function (val) {
+            return val.toFixed(this.decPla);
+        }
+
+        this.setView = function (val) {
+            const { el } = this;
+            if (el instanceof Array) {
+                el.forEach(ele => {
+                    setValueType(ele, val);
+                })
+                return;
+            }
+            setValueType(el, val);
+        }
+
+        function setValueType(el, val) {
+            if (el.value != undefined && el.tagName !== 'BUTTON') {
+                el.value = val;
+            } else {
+                el.innerText = val;
+            }
+        }
+
+        this.restDuration = () => {
+            this.duration = this.options.duration * 1000;
+        }
+
+        // 初始化
+        this.reset = function () {
+            this._startTime = null;
+            this.ref = null;
+        }
+
+        this.restDuration();
+    }
+
+    let btn = el('#btn').addEventListener('click', (ev) => {
+        const time = parseInt(el('#timeValue').value);
+        const decPla = parseInt(el('#decPlaValue').value);
+        const endValue = parseInt(el('#endValue').value);
+        let o = new init([
+            el("#text"),
+            el("#text1"),
+            el("#btn-count"),
+            el("#input-text"),
+        ], endValue, {
+            startValue: 0,
+            duration: time,
+            decPla,
+            done,
+            change
+        });
+
+        function done(arg) {
+            console.log("完成了");
+        }
+
+        function change(arg) {
+            console.log("我在中！");
+        }
+
+
+        o.start(function () {
+            console.log('成功了');
+        });
+    })
+
+</script>
+
+</html>

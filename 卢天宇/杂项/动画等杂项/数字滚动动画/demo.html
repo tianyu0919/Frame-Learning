@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>数字动画增加</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-size: 14px;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .sumadd {
+            width: 200px;
+            height: 30px;
+            margin: 100px 200px;
+        }
+
+        .sumadd .sumaddbox {
+            height: 30px;
+            width: 30px;
+            overflow: hidden;
+            position: relative;
+            float: left;
+            border: 1px solid #666;
+            margin-right: -1px;
+        }
+
+        .sumadd .sumaddbox div {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            width: 30px;
+        }
+
+        .sumadd .sumaddbox div span {
+            height: 30px;
+            width: 30px;
+            text-align: center;
+            line-height: 30px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sumadd" id="sumadd1"></div>
+    <div class="sumadd" id="sumadd2"></div>
+    <div class="sumadd" id="sumadd3"></div>
+</body>
+<script type="text/javascript">
+    (function (win) {//start
+        /*
+        id  引用效果id  自定义
+        num 初始化数字   自定义
+        heigth 移动单元高度 来自id的height样式
+        ctop，duration 请注意修改
+        this.changedong(addnum)  变化调用函数 addnum指定变化后的数字 
+        */
+        function TbdSumadd(id, num, len, heigth, ctop, duration) {//fun gloabl
+            function TbdSumAdd(id, num, len, heigth, ctop, duration) {//class
+                this.ele = document.getElementById(id);
+                this.num = num;
+                this.len = len;
+                this.heigth = heigth;
+                this.ctop = ctop;
+                this.duration = duration;
+                this.foramat = null;
+                var that = this;
+                this.init = function () {
+                    this.foramatsum();
+                };
+                this.foramatsum = function () {
+                    this.foramat = this.digui(this.num.toString().split(""));
+                    this.append();
+                    //alert(this.foramat);	
+                    this.firstdong();
+                };
+                this.digui = function (arr) {
+                    if (arr.length >= len) {
+                        return arr;
+                    } else {
+                        arr.unshift(0);
+                        return this.digui(arr);
+                    }
+                };
+                this.append = function () {
+                    for (var i = 0; i < this.len; i++) {
+                        var oo = document.createElement("div");
+                        oo.className = "sumaddbox";
+                        oo.innerHTML = "<div animated=and" + i + "><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div>";
+                        this.ele.appendChild(oo);
+                        this[i] = oo;
+                    };
+                };
+                this.firstdong = function () {
+                    this.bh();
+                };
+                this.changedong = function (nownum) {
+                    this.num = nownum;
+                    this.foramat = this.digui(nownum.toString().split(""));
+                    this.bh();
+                };
+                this.bh = function () {
+                    for (var i = 0; i < this.len; i++) {
+                        clearInterval(this["and" + i]);
+                        var hitop = -this.foramat[i] * this.heigth;
+                        var sitop = this[i].getElementsByTagName("div")[0].offsetTop;
+                        if (sitop == hitop) {
+                        } else {
+                            this.animatetop(i, sitop, hitop);
+                        };
+                    };
+                };
+                this.animatetop = function (i, sitop, hitop) {
+                    if (sitop == hitop) {
+                    } else if (sitop > hitop) {
+                        that["and" + i] = setInterval(function () {
+                            var timetop = that[i].getElementsByTagName("div")[0].offsetTop;
+                            if (timetop <= hitop) {
+                                that[i].getElementsByTagName("div")[0].style.top = hitop + "px";
+                                var andid = that[i].getElementsByTagName("div")[0].getAttribute("animated");
+                                clearInterval(that[andid]);
+                            } else {
+                                that[i].getElementsByTagName("div")[0].style.top = (timetop - that.ctop) + "px";
+                            };
+                        }, that.duration);
+                    } else if (sitop < hitop) {
+                        that["and" + i] = setInterval(function () {
+                            var timetop = that[i].getElementsByTagName("div")[0].offsetTop;
+                            if (timetop >= hitop) {
+                                that[i].getElementsByTagName("div")[0].style.top = hitop + "px";
+                                var andid = that[i].getElementsByTagName("div")[0].getAttribute("animated");
+                                clearInterval(that[andid]);
+                            } else {
+                                that[i].getElementsByTagName("div")[0].style.top = (timetop + that.ctop) + "px";
+                            };
+                        }, that.duration);
+                    };
+                };
+            };
+            //renturn	
+            var obj = new TbdSumAdd(id, num, len, heigth, ctop, duration);
+            obj.init();
+            return obj;
+        };//end
+        win.TbdSumadd = TbdSumadd;
+    })(window);//end
+</script>
+<script type="text/javascript">
+    window.onload = function () {
+        //实例1
+        var obj1 = TbdSumadd("sumadd1", 980, 5, 30, 5, 10);//创建对象
+        setInterval(function () {//模拟后台定时向后台发送请求，返回最新人数		
+            var addnum = obj1.num + Math.floor(Math.random() * 50);//增加的人数,模拟增加，实际中ajax success返回
+            console.log(addnum);
+            obj1.changedong(addnum);//动态变化到变化后人数
+        }, 10000);//10秒请求一次
+
+        //实例2
+        var obj2 = TbdSumadd("sumadd2", 20, 5, 30, 5, 10);//创建对象
+        setInterval(function () {//模拟后台定时向后台发送请求，返回最新人数		
+            var addnum = obj2.num + Math.floor(Math.random() * 50);//增加的人数,模拟增加，实际中ajax success返回
+            console.log(addnum);
+            obj2.changedong(addnum);//动态变化到变化后人数
+        }, 11000);//10秒请求一次
+
+        //实例3
+        var obj3 = TbdSumadd("sumadd3", 11023, 5, 30, 5, 10);//创建对象
+        setInterval(function () {//模拟后台定时向后台发送请求，返回最新人数		
+            var addnum = obj3.num + Math.floor(Math.random() * 50);//增加的人数,模拟增加，实际中ajax success返回
+            console.log(addnum);
+            obj3.changedong(addnum);//动态变化到变化后人数
+        }, 12000);//10秒请求一次
+
+    };
+</script>
+
+</html>

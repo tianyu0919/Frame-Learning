@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="归宿" />
+    <meta name="Keywords" content="关键字" />
+    <script src="/public/js/react.development.js" type="text/javascript"></script>
+    <script src="/public/js/react-dom.development.js" type="text/javascript"></script>
+    <script src="/public/js/babel.min.js" type="text/javascript"></script>
+    <script src="/node_modules/antd/dist/antd.js" type="text/javascript"></script>
+    <link href="/node_modules/antd/dist/antd.css" rel="stylesheet" type="text/css" />
+    <title>网页标题</title>
+</head>
+
+<body>
+    <div id="root"></div>
+    <div id="root1"></div>
+</body>
+
+<script type="text/babel">
+
+    /* 
+        注意 useState 不会像 class 中 setState 一样，useState 会替换掉以前的值， setState 会合并。
+    */
+
+    const { useState } = React;
+
+    function Root() {
+        let [userInfo, setUserInfo] = useState({
+            name: '卢天宇',
+            age: 10
+        })
+
+        return (
+            <div>
+                <button onClick={() => { setUserInfo({ ...userInfo, age: Math.random() * 100 }) }}>修改</button>
+                我是{userInfo.name}, 我今年{userInfo.age} 岁了。
+            </div >
+        )
+    }
+
+    ReactDOM.render(<Root />, document.querySelector('#root'));
+
+    class Rout extends React.Component {
+        state = {
+            name: '卢天宇',
+            age: 10
+        }
+
+        render() {
+            return (
+                <div>
+                    <button onClick={() => { this.setState({ age: Math.random() * 100 }) }}>修改</button>
+                    我是{this.state.name},我今年{this.state.age}岁了。
+                </div>
+            )
+        }
+    }
+    ReactDOM.render(<Rout />, document.querySelector('#root1'));
+
+</script>
+
+</html>

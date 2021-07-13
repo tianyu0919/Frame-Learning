@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="归宿" />
+    <meta name="Keywords" content="关键字" />
+    <script src="/public/js/react.development.js" type="text/javascript"></script>
+    <script src="/public/js/react-dom.development.js" type="text/javascript"></script>
+    <script src="/public/js/babel.min.js" type="text/javascript"></script>
+    <script src="/node_modules/antd/dist/antd.js" type="text/javascript"></script>
+    <link href="/node_modules/antd/dist/antd.css" rel="stylesheet" type="text/css" />
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .btn-container {
+            text-align: center;
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: #fdfdfd;
+            border-bottom: 1px solid #fdfdfd;
+            box-shadow: 0px 3px 5px #f1f1f1;
+        }
+
+        .btn-container .btn+.btn {
+            margin-left: 10px;
+        }
+
+        .content {
+            padding-top: 20px;
+            box-sizing: border-box;
+            width: 90%;
+            margin: auto;
+            border: 1px solid #fdfefe;
+        }
+    </style>
+    <title>模仿路由，动态加载组件</title>
+</head>
+
+<body>
+    <div id="root"></div>
+</body>
+
+<script type="text/babel">
+    const { Button } = antd;
+    const { useState, useEffect } = React;
+
+    class Root extends React.Component {
+        constructor(props) {
+            super(props);
+        }
+
+        state = {
+            currentCom: null,
+            isInit: false
+        }
+
+        componentWillMount() {
+            console.log('1')
+            const { props } = this;
+            window.addEventListener('hashchange', ev => {
+                const hash = window.location.hash.split('#')[1];
+                this.setState({
+                    currentCom: hash
+                });
+            })
+        }
+
+        componentDidUpdate(prevProps, prevState) { // 上一个props 上一个state
+
+        }
+
+        componentDidMount() {
+            console.log('3')
+        }
+
+        setActiveBtn = (key) => {
+            this.setState({ currentCom: key, isInit: true });
+        }
+
+        render() {
+            console.log('2')
+            const { route } = this.props;
+            const { currentCom, isInit } = this.state;
+            let com = route.filter(v => v.key === currentCom)[0];
+            console.log(com);
+            return <div>
+                <TitleBtn setActiveBtn={this.setActiveBtn} isInit={isInit} />
+                <div className="content">
+                    {
+                        // route.filter(v => v.key === currentCom)[0]?.com || <Home />
+                        com && com.comp || <Home />
+                    }
+                </div>
+            </div>
+        }
+    }
+
+    function TitleBtn(props) {
+        let btnArr = [
+            { key: 'home', name: '首页' },
+            { key: 'mine', name: '我的' },
+            { key: 'about', name: '关于' }
+        ]
+
+        const [current, setCurrent] = useState(btnArr[0].key);
+        const { setActiveBtn, isInit } = props;
+        useEffect(() => { // 类似于 componentDidMount 和 componentDidUpdate
+            if (!isInit) {
+                setActiveBtn(btnArr[0].key);
+            }
+            return function () { // 如果返回了一个方法，那 实例在 卸载的时候，则会自动执行该方法。类似于 componentWillUnmount
+                console.log('我删除了');
+            }
+        })
+        return (
+            <div className="btn-container">
+                {
+                    btnArr.map(v => (
+                        <Button
+                            className={`btn ${current === v.key ? 'active' : ''}`}
+                            x={v.key}
+                            key={v.key}
+                            type={current === v.key ? 'primary' : ''} onClick={(e) => {
+                                if (current === v.key) return;
+                                setCurrent(v.key);
+                                window.location.hash = v.key;
+                            }}>
+                            {v.name}
+                        </Button>))
+                }
+            </div>
+        )
+    }
+
+    function Home() {
+        return (
+            <div>
+                我是Home页面
+            </div>
+        )
+    }
+
+    function Mine() {
+        return (
+            <div>
+                我是Mine页面
+            </div>
+        )
+    }
+
+    function About() {
+        return (
+            <div>
+                我是About页面
+            </div>
+        )
+    }
+
+    const route = [
+        { key: 'home', comp: <Home /> },
+        { key: 'mine', comp: <Mine /> },
+        { key: 'about', comp: <About /> },
+    ]
+
+    ReactDOM.render(<Root route={route} />, document.getElementById('root'));
+</script>
+
+</html>
