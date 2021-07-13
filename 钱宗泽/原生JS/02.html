@@ -10,9 +10,20 @@
     <meta name="Keywords" content="关键字" />
     <title>网页标题</title>
 </head>
-
+<style>
+    #box{
+        width: auto;
+        height: 40px;
+        background: yellowgreen;
+        text-align: center;
+        line-height: 40px;
+        color: white;
+    }
+</style>
 <body>
-
+    <div id="box">
+        <span id="sp"></span>
+    </div>
 </body>
 
 </html>
@@ -25,33 +36,73 @@
     }
     // for in 循环对象
     for (let i in obj) {
-        console.log(obj[i])
+        // console.log(obj[i])
     }
     // 使用Object.keys() 遍历对象属性命
     var keys = Object.keys(obj)
-    console.log(keys);
     // 使用Object.values 遍历对象属性值
     var values = Object.values(obj)
-    console.log(values);
     // 使用Object.getOwnPropertyNames 遍历对象属性名
     var three = Object.getOwnPropertyNames(obj)
-    console.log(three)
 
     // 添加对象属性
     obj.love = 'music'
     console.log(obj);
     // 删除对象属性
     delete obj.age
-    console.log(obj);
 
     // 对象方法==================================================================================================
 
     // 对象访问器:
     var obj = {
         name: '周杰伦的花海',
+        num:0,
+        get getValue() {
+          return this.num
+        },
+        set setValue(val) {
+            this.num = val;
+        },
     }
+    console.log(obj)
+    console.log(obj.getValue);
 
+    // 获取dom
+    var box = document.getElementById('box')
+    var span = document.getElementById('sp')
+    span.innerHTML = obj.getValue
+    box.addEventListener('click',()=>{
+        obj.setValue = Math.random()
+        span.innerHTML = obj.getValue
+    })
 
+    var abc = {
+        name:'justin',
+        love:'Anyone'
+    }
+    Object.defineProperty(abc,'getValue',{
+        get:()=>{return this.name},
+    })
+    Object.defineProperty(abc,"setValue",{
+        set:function(base){this.name = base }
+    })
+    abc.setValue = 1000
+    console.log(abc);
 
+    // 对象构造器======================================================================================
+    function base(name,age,sex,enjoy){
+        this.__proto__.name = 'yes'
+        this.name = this.__proto__.name
+    }
+    var one = new base()
 
+    // 对象方法========================================================================================
+    var obj = {
+        name:'张杰',
+        sex:'男'
+    }
+    // 访问对象属性原型
+    console.log(obj.__proto__);
+    console.log(Object.getPrototypeOf(obj))
+    
 </script>
