@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="林俊杰" />
+    <meta name="Keywords" content="关键字" />
+    <title>网页标题</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+    // js 对象===============================================================================================
+    var obj = {
+        name: "林俊杰",
+        age: 22,
+        color: 'purple'
+    }
+    // for in 循环对象
+    for (let i in obj) {
+        console.log(obj[i])
+    }
+    // 使用Object.keys() 遍历对象属性命
+    var keys = Object.keys(obj)
+    console.log(keys);
+    // 使用Object.values 遍历对象属性值
+    var values = Object.values(obj)
+    console.log(values);
+    // 使用Object.getOwnPropertyNames 遍历对象属性名
+    var three = Object.getOwnPropertyNames(obj)
+    console.log(three)
+
+    // 添加对象属性
+    obj.love = 'music'
+    console.log(obj);
+    // 删除对象属性
+    delete obj.age
+    console.log(obj);
+
+    // 对象方法==================================================================================================
+
+    // 对象访问器:
+    var obj = {
+        name: '周杰伦的花海',
+    }
+
+
+
+
+</script>

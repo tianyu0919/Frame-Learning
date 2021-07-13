@@ -1,0 +1,178 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="林俊杰" />
+    <meta name="Keywords" content="关键字" />
+    <title>网页标题</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+    // js从零开始
+    // 数据类型
+    // number string  undefined object  Array  NaN Symbol  bigInt  Boolean  null
+    // 对象
+    var obj = {
+        name: '张',
+        age: 22,
+        color: 'pink',
+        fun: () => {
+            // 传统的函数 this 指向为 对象本身 
+            // 箭头函数  this指向为 父级所存在的作用域
+            console.log(this)
+        }
+    }
+
+    // 如果用new创建变量 则会创建为对象
+    var base = new String()
+    console.log(typeof base)
+
+    // 字面量创建 字符串 与 构造函数创建字符串的数据类型不同
+    // var base = '字面量创建'(字符串类型)
+    // var str = new String('构造函数创建')(对象类型)
+
+    // 字符串方法=============================================================================
+    // 字符串具有长度 length
+    var base = '我是字符串，请用我来进行测试字符串方法'
+        // alert(base.length)
+        // indexof(’str‘,startIndex) 查找字符串 找到后返回索引 未找到返回-1 
+        // console.log(base.indexOf('请','这个参数意思是开始位置'))
+
+    // 提取部分字符串方法有三种
+    // (1) slice(’start‘,’end‘)  提取字符串,返回开始索引与结束索引之间的字符串 【包含开始位置的字符】 如果省略结束位置 那就从开始位置截取至字符末尾
+    // let one = base.slice(3)
+    // (2) substring() 类似于slice 不同之处是 substring()无法接受付的索引
+    //  let two = base.substring(1)
+    // (3) substr()类似于slice 不同之处是 第二个参数规定提取字符的长度
+    // let three = base.substr(3,3)
+
+    // 替换字符串 replace() 不会改变原字符串 该方法返回新字符串  默认修改匹配到的第一个字符 区分大小写 /字符/g 为匹配全局
+    // var str = base.replace(/字符串/g,'林俊杰')
+    // console.log(str)
+
+    // 字符串转换大小写
+    // let str = 'abcde'
+    // console.log(str.toUpperCase());
+    // console.log(str.toLowerCase());
+
+    // 拼接、连接多个字符串 concat()
+    // let four  = base.concat('我','我们')
+    // console.log(four);
+
+    // 删除字符串两端空格 trim()
+    // let five = '   kong格子'
+    // let six = five.trim()
+    // console.log(six.length);
+
+    // 提取指定下标的字符串方法 charAt(index)找不到返回空；
+    // let seven = base.charAt(100)
+    // console.log(seven);
+
+    // 字符串转为数组 split() 传入‘’ 空字符会将每个字符串分隔开
+    let eight = base.split('')
+    console.log(eight);
+
+    // 数字类型篇===============================================================================
+    var num = 1200
+    // 字符串与数字相+  结果都是字符串
+    // let a = 10;
+    // let b = 20;
+    // let c = '30'
+    // console.log(typeof(c+ a + b));
+
+    // js中会尝试将数字字符串转化为数字进行操作 [排除数字字符串相加]
+
+    // 数字方法()
+    // toFixed('位数') 指定位数的小数
+    // console.log(num.toFixed(2));
+    
+    // toPrecision()返回数字的字符串值 ？为什么不用tostring()?
+    // console.log(num.toPrecision());
+
+    // valueof() 返回变量的数字值
+    // console.log(num.valueOf())
+
+    // 转换为数字类型的方法有三个
+     var ber = '1'
+    // (1) Number()
+        // console.log(Number(ber))    
+    //(2)parserInt() 解析一段字符串 返回第一个数字字符的数值 并返回整数
+        // console.log(parseInt(ber));
+    //(3)parseFloat()返回数字浮点数
+
+
+    // 数组类型=============================================================================
+    // 数组是一种特殊的对象  数组的元素可以是对象 数组具有length 数组的长度永远大于数组的下标  数组的长度从1开始
+    var arr = [1,2,3,4,5]
+    // 数组的遍历
+    // for()循环遍历
+    for(var i = 0;i<arr.length;i++){
+        // console.log(arr[i]);
+    }
+
+    // map()遍历 map()循环可以返回数据  foreach()不能
+   arr.map((item,index)=>{
+    //    console.log(item)
+   })
+   
+   arr.forEach((item,index)=>{
+    //    console.log(item);
+   })
+
+    // 添加数组元素 可以使用 push() [从末尾出添加],unshift()[从开头添加]
+    // arr.unshift(6)
+
+    // 如何识别数组？ 不可以用typeof 会判断为对象， 所以要使用 instance of 或者 Array.isArray()
+    // console.log(Array.isArray(arr)); true
+    // console.log(arr instanceof Array);true
+
+    // 排序函数 sort()
+    var arr = [102,444,2312,4444,566]
+    // var arr = arr.sort((a,b)=>{return b-a})
+    // console.log(arr); 
+
+    // 判断最大值
+    // console.log(Math.max(arr[0],arr[1]));
+
+    // 过滤数组 找出返回符合条件的元素 如果没有就返回空数组  也算是一种数组的遍历
+    var arr = arr.filter((val,index)=>{
+        return val<100
+    })
+    console.log(arr);
+
+    // every()  判断数组元素是否全部符合条件
+    // some()   判断数组元素是否有符合条件的
+    // find() 返回匹配规则的第一个元素
+
+    // 数组indexof('元素')  返回元素的索引值
+
+    // 抛出错误
+    // throw '今天好好学习'
+
+    // 作用域：在函数中未声明的变量 默认为全局变量
+    
+    // get 与 set
+    var obj = {
+        name:'张',
+        age:'22',
+        color:'pink',
+        get lane() {
+            return this.name
+        },
+        set lane(value) {
+            this.name = value
+        }
+    }
+    obj.lane='林'
+    console.log(obj);
+
+</script>
