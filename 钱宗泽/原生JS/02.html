@@ -11,7 +11,7 @@
     <title>网页标题</title>
 </head>
 <style>
-    #box{
+    #box {
         width: auto;
         height: 40px;
         background: yellowgreen;
@@ -20,10 +20,12 @@
         color: white;
     }
 </style>
+
 <body>
     <div id="box">
         <span id="sp"></span>
     </div>
+
 </body>
 
 </html>
@@ -56,9 +58,9 @@
     // 对象访问器:
     var obj = {
         name: '周杰伦的花海',
-        num:0,
+        num: 0,
         get getValue() {
-          return this.num
+            return this.num
         },
         set setValue(val) {
             this.num = val;
@@ -71,26 +73,26 @@
     var box = document.getElementById('box')
     var span = document.getElementById('sp')
     span.innerHTML = obj.getValue
-    box.addEventListener('click',()=>{
+    box.addEventListener('click', () => {
         obj.setValue = Math.random()
         span.innerHTML = obj.getValue
     })
 
     var abc = {
-        name:'justin',
-        love:'Anyone'
+        name: 'justin',
+        love: 'Anyone'
     }
-    Object.defineProperty(abc,'getValue',{
-        get:()=>{return this.name},
+    Object.defineProperty(abc, 'getValue', {
+        get: () => { return this.name },
     })
-    Object.defineProperty(abc,"setValue",{
-        set:function(base){this.name = base }
+    Object.defineProperty(abc, "setValue", {
+        set: function (base) { this.name = base }
     })
     abc.setValue = 1000
     console.log(abc);
 
     // 对象构造器======================================================================================
-    function base(name,age,sex,enjoy){
+    function base(name, age, sex, enjoy) {
         this.__proto__.name = 'yes'
         this.name = this.__proto__.name
     }
@@ -98,11 +100,148 @@
 
     // 对象方法========================================================================================
     var obj = {
-        name:'张杰',
-        sex:'男'
+        name: '张杰',
+        sex: '男'
     }
     // 访问对象属性原型
     console.log(obj.__proto__);
     console.log(Object.getPrototypeOf(obj))
+
+    //对象的密封 冻结  不可拓展
+    // Object.seal(obj);
+    // Object.freeze(obj);
+    // Object.preventExtensions(obj)
+    // 对象是否密封？
+    console.log(Object.isSealed(obj))
+    // 对象是否冻结？
+    console.log(Object.isFrozen(obj))
+    // 对象是否不可拓展？   
+    console.log(Object.isExtensible(obj))
+
+    // 对象中添加属性
+    Object.defineProperty(obj, 'fine', { value: 'ok' })
+    console.log(obj)
+
+    // function函数=========================================================================================
+    function base(x, y, z) {
+        return this
+        console.log(Array.from(arguments))
+    }
+    var bass = base()
+    console.log(bass);
+    // call()方法
+    var zero = {
+        fun() {
+            console.log(this.name, '这是值')
+        }
+    }
+    var one = {
+        name: '我是第一'
+    }
+    var two = {
+        name: '我是第二'
+    }
+    zero.fun.call(one)
+    // apply()方法 call和apply的区别为 apply使用数组接收参数
+
+    // 闭包
+    var add = (function bdd() {
+        var counter = 0;
+        return function () { return counter += 1; };
+    })()
+    add()
+    add()
+    console.log(add())
+
+    // 不会叠加
+    function as() {
+        var pass = 0;
+        return function () {
+            pass += 1
+        }
+    }
+    as();
+    as()
+
+    // 2021年7月13日21:28:37
+    // es6 教程========================================================================================
+    // let 和 const
+    // let 声明的变量只在所在的代码块内有效，for循环声明的变量适合let 声明
+    // let 不允许在同一作用域 重复声明同一变量
+    var a = [];
+
+    for (var i = 0; i < 10; i++) {
+        a[i] = function () {
+            console.log(i);
+        };
+    }
+    a[0]();
+
+    // 暂时性死区 ：使用let声明变量前，该变量都是不可用的
+
+    // const 一个只读的常量  一但声明 值就无法再改变 ,并且立即赋值。 const也是只在声明的作用域中生效、
+
+    // 变量的解构赋值
+    // 以前为变量指定值=>
+    var one = 1;
+    var two = 2;
+    var three = 3;
+    // es6 的解构赋值=>
+    var [one, two, three] = [1, 2, 3]
+    console.table(one, two, three)
+
+    // 解构赋值可以从数组中提取值 为变量赋值 也可以具有默认值  但是需要被解构元素为undefined时才会生效
+    // 数组的解构赋值按照排序顺序赋值 而对象的解构赋值则变量名必须与对象属性名相同才可以被解构出来,如果没有解构到 变量则为undefined
+    var obj = {
+        name: '林俊杰',
+        age: 22,
+        height: 175,
+        sex: '男'
+    }
+    // 对象解构赋值
+    let { name, age, fan } = obj
+    console.log(name, age, fan)
+
+    // 解构赋值的用途有很多：
+    // 比如交换变量的值
+    let xs= 100;
+    let ys = 200;
+    [ys,xs]=[xs,ys]
+    console.table(xs,ys)
+    // 字符串的新增方法
+    var str = '测试字符串'
+    // includes(str,start_index) 判断是否包含字符 
+    // startsWith()判断字符是否在开始位置
+    // endsWidth()判断字符是否在结束位置
+   console.log(str.includes('字'));
+   console.log(str.startsWith('您'))
+   console.log(str.endsWith('串'));
+   // repeat(num) 返回一个新字符串 表示将字符串重复多少次 参数是小数会被取整 ，是负数会报错
+      var st100 = str.repeat(100)
+    // 补全字符串 padStart(num,'str') padEnd(num,'str') 从头部/从尾部 补全
+    console.log(str.padStart(11,'从头部补全'))
+    // 消除字符空格 str.trim() str.trimStart() str.trimEnd()
+
+    // 匹配字符串 replace() 只能匹配到第一个条件字符 （/字符/g  才行）, 但是replaceAll()可以匹配全部
+    var str = '你你你们'
+    console.log(str.replace('你', '他'))
+    console.log(str.replaceAll('你','您'));
+
+    // 数字的扩展方法
+    // 检测一个数字是否是有限的 而不是无穷大 Number.isFinite(num)
+    console.log(Number.isFinite(100))
+    
+    //判断一个数字是否是NaN Number.isNaN()
+     console.log(Number.isNaN(NaN));
+
+    //判断一个数字是否为整数 Number.isInteger()
+    console.log(Number.isInteger(100));
+
+    // 去除浮点数的小数部分  Math.trunc()
+    console.log(Math.trunc(100.2))
+
+    // 判断数字是整数 负数 还是零 Math.sign() 整数返回1 负数返回-1 零返回0 其他值返回NaN
+    console.log(Math.sign(100));
+
     
 </script>

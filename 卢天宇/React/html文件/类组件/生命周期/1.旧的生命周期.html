@@ -1,0 +1,184 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="归宿" />
+    <meta name="Keywords" content="关键字" />
+    <script src="/public/js/react.development.js" type="text/javascript"></script>
+    <script src="/public/js/react-dom.development.js" type="text/javascript"></script>
+    <script src="/public/js/babel.min.js" type="text/javascript"></script>
+    <script src="/node_modules/antd/dist/antd.js" type="text/javascript"></script>
+    <link href="/node_modules/antd/dist/antd.css" rel="stylesheet" type="text/css" />
+    <title>网页标题</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        h1 {
+            padding: 10px 0px;
+            box-sizing: border-box;
+        }
+
+        .btnContainer {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .btnContainer .btn+.btn {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+</body>
+
+<script type="text/babel">
+    /*
+        ReactDOM.render(Node) 挂载实例
+        ReactDOM.unmountComponentAtNode(Node); 卸载实例
+        1. constructor --- 构造函数
+        2. componentWillMount --- 将要挂载了
+        3. render --- 挂载方法（只要数据变了，就执行，所以执行多次）
+        4. componentDidMount --- 挂载完毕
+        5. componentWillUpdate --- 数据变化之前，将于 render 之前执行
+        6. componentDidUpdate --- 数据变化之后，将于 render 之后执行
+        7. componentWillUnmount --- 卸载之前执行。
+
+        如果 使用 setState() 更改了数据则会触发
+        8. shouldComponentUpdate --- 表示可以更新吗？如果返回 true 则会走 调用 5 3 6 钩子，否则不会发生任何改变。
+
+        使用 forceUpdate() 强制更新组件。会跳过第 8 个钩子，正常更新 5 3 6 钩子，如果传入了一个回调函数，则走完 componentDidUpdate 之后会立即执行该回调函数。
+
+        9. componentWillReceiveProps --- 父组件再次render的时候，发送了props，如果父组件给子组件传递了props，则会执行该生命周期，第一个参数为最新的props。接着走 8 5 3 6 钩子
+    */
+    const { Button, message } = antd;
+    class MyComponent extends React.Component {
+        constructor() {
+            super();
+            console.log('constructor---1');
+        }
+
+        componentWillMount() {
+            console.log('componentWillMount---2');
+        }
+
+        componentDidMount() {
+            console.log("componentDidMount---4");
+        }
+
+        componentWillUpdate() {
+            console.log('componentWillUpdate---数据变化之前');
+        }
+
+        componentDidUpdate() {
+            console.log("componentDidUpdate---数据变化之后");
+        }
+
+        componentWillUnmount() {
+            console.log("componentWillUnmount---将要删除");
+            message.info("将要删除了");
+        }
+
+        shouldComponentUpdate() {
+            console.log('componentShouldUpdate---可以更新吗？');
+            return true;
+            // return false;
+        }
+
+        state = { count: 0 };
+
+        plus = () => {
+            const { count } = this.state;
+            this.setState({ count: count + 1 });
+        };
+
+        less = () => {
+            const { count, isDel } = this.state;
+            if (!count) {
+                this.setState({ isDel: true })
+                if (isDel) {
+                    ReactDOM.unmountComponentAtNode(document.querySelector("#app"));
+                    return;
+                }
+                message.error({
+                    content: `不能再少了，在点击1下，将卸载组件`,
+                    duration: 1
+                });
+                return;
+            }
+            this.setState({ count: count - 1, isDel: false });
+        };
+
+        force = () => {
+            this.forceUpdate(() => {
+                console.log("forceUpdate---更新完毕咯");
+                this.setState({ count: 10 });
+            });
+        }
+
+        render() {
+            console.log('render---3');
+            const { count } = this.state;
+            // 由于不可以直接更改 props 所以，我们定义了一个解构赋值，间接修改解构赋值这个变量的参数。即可完成修改。
+            let { name } = this.props;
+            name += 1;
+            return (
+                <div>
+                    <h1 style={{ 'textAlign': 'center' }}>{name + count}</h1>
+                    <div className="btnContainer">
+                        <Button className='btn' type="primary" onClick={this.plus}>+</Button>
+                        <Button className='btn' type="primary" onClick={this.less}>-</Button>
+                        <Button className='btn' type="primary" onClick={this.force}>强制更新</Button>
+                    </div>
+                    <Child n={count} na={count + 1} />
+                </div>
+            )
+        };
+    }
+
+    class Child extends React.Component {
+        componentWillReceiveProps(newProps) {
+            console.log('Child----componentWillReceiveProps---我接受了值', newProps);
+        }
+
+        
+        componentWillUpdate() {
+            console.log('Child----componentWillUpdate---数据变化之前');
+        }
+
+        componentDidUpdate() {
+            console.log("Child----componentDidUpdate---数据变化之后");
+        }
+
+        componentWillUnmount() {
+            console.log("Child----componentWillUnmount---将要删除");
+            message.info("将要删除了");
+        }
+
+        shouldComponentUpdate() {
+            console.log('Child----componentShouldUpdate---可以更新吗？');
+            return true;
+            // return false;
+        }
+
+        render() {
+            console.log('Child----render---挂载了');
+
+            return (
+                <h3>我是子组件，父组件传过来的值是：{this.props.n}</h3>
+            )
+        }
+    }
+
+    ReactDOM.render(<MyComponent name='卢天宇' />, document.querySelector("#app"));
+</script>
+
+</html>

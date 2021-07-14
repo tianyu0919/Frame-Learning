@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="归宿" />
+    <meta name="Keywords" content="关键字" />
+    <script src="/public/js/react.development.js" type="text/javascript"></script>
+    <script src="/public/js/react-dom.development.js" type="text/javascript"></script>
+    <script src="/public/js/babel.min.js" type="text/javascript"></script>
+    <script src="/node_modules/antd/dist/antd.js" type="text/javascript"></script>
+    <link href="/node_modules/antd/dist/antd.css" rel="stylesheet" type="text/css" />
+    <title>网页标题</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        h1 {
+            padding: 10px 0px;
+            box-sizing: border-box;
+        }
+
+        .btnContainer {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .btnContainer .btn+.btn {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+</body>
+
+<script type="text/babel">
+    /*
+        在新的生命周周期中，下方三个生命周期不推荐使用，如要使用，开头加上 UNSAFE_ 否则，在18版本中将不再执行。
+        1. componentWillMount --- 将要挂载了
+        2. componentWillUpdate --- 数据变化之前，将于 render 之前执行
+        3. componentWillReceiveProps --- 父组件再次render的时候，发送了props，如果父组件给子组件传递了props，则会执行该生命周期，第一个参数为最新的props。接着走 8 5 3 6 钩子
+
+        新出的狗子：
+        1. getDerivedStateFromProps(props:传进来的props, state:当前自己的state) 使用 props 来延伸对象 state，一般用于当前 state 完全由 props 掌握。
+        2. getSnapshotBeforeUpdate()
+    */
+    const { Button, message } = antd;
+    class MyComponent extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = { count: 0 };
+            console.log('constructor---1');
+        }
+
+        /*
+            调用时机：render 之前，更新 props 或者修改 state 时候调用。
+            解释： 获取一个来自 props 的派生状态。
+            使用场景：适用于当前的 state 完全由 props 来控制。
+            获取两个状态，第一个是 props 第二个是自己的 state 如果把他理解为 vue中的 watch 也可以。
+            判断当前的 state 跟已经修改的 props
+        */
+        static getDerivedStateFromProps(props, state) {
+            console.log("getDerivedStateFromProps");
+            console.log(props, state);
+            return { count: props.c };
+        }
+
+        // 更新完毕之前。需要跟 componentDidUpdate 一起使用。
+        getSnapshotBeforeUpdate(prevProps, prevState) {
+            console.log("getSnapshotBeforeUpdate", arguments);
+            return { 'xx': 123 };
+        }
+
+        componentDidUpdate(prevProps, PrevState, snapshot) {
+            console.log("componentDidUpdate");
+            console.log(prevProps, PrevState, data)
+        }
+
+        plus = () => {
+            const { count } = this.state;
+            this.setState({ count: count + 1 });
+        };
+
+        less = () => {
+            const { count, isDel } = this.state;
+            if (!count) {
+                this.setState({ isDel: true })
+                if (isDel) {
+                    ReactDOM.unmountComponentAtNode(document.querySelector("#app"));
+                    return;
+                }
+                message.error({
+                    content: `不能再少了，在点击1下，将卸载组件`,
+                    duration: 1
+                });
+                return;
+            }
+            this.setState({ count: count - 1, isDel: false });
+        };
+
+        force = () => {
+            this.forceUpdate(() => {
+                console.log("forceUpdate---更新完毕咯");
+                this.setState({ count: 10 });
+            });
+        }
+
+        render() {
+            console.log('render---3');
+            const { count } = this.state;
+            // 由于不可以直接更改 props 所以，我们定义了一个解构赋值，间接修改解构赋值这个变量的参数。即可完成修改。
+            let { name } = this.props;
+            name += 1;
+            return (
+                <div>
+                    <h1 style={{ 'textAlign': 'center' }}>{name}：{count}</h1>
+                    <div className="btnContainer">
+                        <Button className='btn' type="primary" onClick={this.plus}>+</Button>
+                        <Button className='btn' type="primary" onClick={this.less}>-</Button>
+                        <Button className='btn' type="primary" onClick={this.force}>强制更新</Button>
+                    </div>
+                </div>
+            )
+        };
+    }
+
+    ReactDOM.render(<MyComponent name='卢天宇' c={11} />, document.querySelector("#app"));
+</script>
+
+</html>

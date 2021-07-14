@@ -1,0 +1,238 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="description" content="网站的描述内容。" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="Author" content="归宿" />
+    <meta name="Keywords" content="关键字" />
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+    <title>网页标题</title>
+</head>
+
+<body>
+    <!-- <canvas id="canvas">您的浏览器不支持该插件！</canvas> -->
+    <!-- <img src="./img/xx.png" /> -->
+</body>
+
+<script type="text/javascript">
+    // let canvas = document.querySelector('#canvas');
+
+    // window.addEventListener('resize', (() => {
+    //     let timer = null, w, h;
+    //     function setCanvasOptions() {
+    //         w = window.innerWidth;
+    //         h = window.innerHeight;
+    //         canvas.width = w;
+    //         canvas.height = h;
+    //     }
+    //     setCanvasOptions();
+    //     return () => {
+    //         if (timer) clearTimeout(timer);
+    //         timer = setTimeout(setCanvasOptions, 100)
+    //     }
+    // })())
+
+    // let ctx = canvas.getContext('2d');
+
+    // ctx.roundRect = function (x, y, w, h, r) {
+    //     if (w < 2 * r) r = w / 2;
+    //     if (h < 2 * r) r = h / 2;
+    //     this.beginPath();
+    //     this.moveTo(x + r, y);
+    //     this.arcTo(x + w, y, x + w, y + h, r);
+    //     this.arcTo(x + w, y + h, x, y + h, r);
+    //     this.arcTo(x, y + h, x, y, r);
+    //     this.arcTo(x, y, x + r, y, r);
+    //     this.closePath();
+    //     return this;
+    // }
+
+    function drawRoundRectText({
+        x = 0,
+        y = 0,
+        w = 100,
+        h = 80,
+        r = 6,
+        padding = 20,
+        border = {
+            width: 4,
+            color: "blue"
+        },
+        bgColor = 'rgba(0, 0, 0, 0.8)',
+        title = '我是标题',
+        text = "10",
+        subText = ['学习', '天']
+    } = {}) {
+        // 创建画布
+        let canvas = document.createElement('canvas');
+        canvas.id = 'canvas';
+        canvas.innerText = '您的浏览器不支持该插件！';
+        let ctx = canvas.getContext('2d');
+        ctx.roundRect = function (x, y, w, h, r) {
+            if (w < 2 * r) r = w / 2;
+            if (h < 2 * r) r = h / 2;
+            this.beginPath();
+            this.moveTo(x + r, y);
+            this.arcTo(x + w, y, x + w, y + h, r);
+            this.arcTo(x + w, y + h, x, y + h, r);
+            this.arcTo(x, y + h, x, y, r);
+            this.arcTo(x, y, x + r, y, r);
+            this.closePath();
+            return this;
+        }
+        canvas.width = w;
+        canvas.height = h;
+        this.canvas = canvas;
+        let offset = 2; // 稍微的偏移量
+
+        const defaultBorder = {
+            width: 3,
+            color: "red",
+        }
+        border = { ...defaultBorder, ...border };
+
+        // 绘画边框等，计算出内容的x，y，宽度，高度
+        let contentX = x + border.width / 2,
+            contentY = y + border.width / 2,
+            contentW = w - border.width,
+            contentH = h - border.width;
+        ctx.save();
+        ctx.roundRect(contentX, contentY, contentW, contentH, r);
+        contentX += border.width / 2;
+        contentY += border.width / 2;
+        contentW -= border.width;
+        contentH -= border.width;
+        ctx.clip();
+        ctx.fillStyle = bgColor;
+        ctx.fill();
+        ctx.restore();
+        ctx.strokeStyle = border.color;
+        ctx.lineWidth = border.width;
+        ctx.stroke();
+
+        this.title = title || "标题";
+        this.subText = subText || "子内容";
+        this.text = text || "110";
+
+        let contentTextObj = {
+            title: {
+                size: 20,
+                text: this.title
+            },
+            subText: {
+                size: 16,
+                text: this.subText
+            },
+            text: {
+                size: 18,
+                text: this.text
+            }
+        }
+
+        ctx.save();
+        for (let [k, v] of Object.entries(contentTextObj)) {
+            ctx.font = `${v.size}px 宋体`;
+            let str = v.text.toString();
+            let { width } = ctx.measureText(str);
+            v.w = width / str.length;
+        }
+        ctx.restore();
+
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+
+        // 开始画标题
+        ctx.save();
+        ctx.font = `${contentTextObj.title.size}px 思源黑`;
+        ctx.fillStyle = "#fff";
+        ctx.shadowColor = "rgb(0 128 0 / 54%)";
+        ctx.shadowColor = "rgb(255 255 255 / 54%)";
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.shadowBlur = 10;
+        ctx.fillText(contentTextObj.title.text, contentX + contentW / 2, contentY + padding / 2 + offset);
+        ctx.restore();
+
+        let bottomPosition = contentH - padding / 2;
+        // 子标题
+        ctx.fillStyle = "rgb(145,147,148)";
+        ctx.textAlign = "start";
+        ctx.textBaseline = "bottom";
+        ctx.font = `${contentTextObj.subText.size}px 思源黑`;
+        ctx.fontWeight = "bold";
+        let numberTextOffset = 10; // 数字文字跟其他文字之间的距离
+        let textSumWidth = (contentTextObj.subText.text[0].length * contentTextObj.subText.w); // 左侧子标题
+        textSumWidth += (contentTextObj.text.text.length * contentTextObj.text.w) + numberTextOffset; // 中间字体文字
+        textSumWidth += (contentTextObj.subText.w - contentTextObj.text.w) + (contentTextObj.subText.text[1].length * contentTextObj.subText.w) + numberTextOffset;
+
+        let subTextX = (contentW - textSumWidth) / 2 + padding / 2; // 计算起始坐标。
+
+        let newX1 = subTextX + (contentTextObj.subText.text[0].length * contentTextObj.subText.w); // 当前的数字坐标
+        let newX2 = newX1 + (contentTextObj.text.text.length * contentTextObj.text.w) / 2 + numberTextOffset;
+        let subTextTwoX = newX1 + (contentTextObj.text.text.length * contentTextObj.text.w) + (contentTextObj.subText.w - contentTextObj.text.w) + numberTextOffset;
+
+        ctx.fillText(contentTextObj.subText.text[0], subTextX, bottomPosition);
+        // 画数字
+        ctx.save();
+        ctx.font = `${contentTextObj.text.size}px 思源黑`;
+        ctx.textAlign = "center";
+        ctx.fillStyle = "rgb(2, 227, 225)"
+        ctx.fillText(contentTextObj.text.text, newX2, bottomPosition);
+
+        ctx.font = `${contentTextObj.subText.size}px 思源黑`;
+
+        ctx.restore();
+        ctx.fillText(contentTextObj.subText.text[1], subTextTwoX, bottomPosition);
+
+        let base64 = canvas.toDataURL('image/png', 1);
+        let a = document.createElement("a");
+        a.href = base64;
+        // console.log(base64);
+        a.download = 'xx.png';
+    }
+
+    const options = {
+        w: 200,
+        h: 80,
+        r: 10,
+        border: {
+            width: 4, color: 'rgb(255,150,2)'
+        },
+        title: '二期B1停车场',
+        text: "100",
+        subText: ["剩余停车位", "个"]
+    }
+
+    var rectText = new drawRoundRectText(options);
+
+    let canvas = rectText.canvas;
+    canvas.addEventListener('click', (ev) => {
+        const { target } = ev;
+        let base64 = target.toDataURL('image/png', 1);
+        let a = document.createElement('a');
+        a.href = base64;
+        a.download = base64.split("64,")[1].slice(0, 6);
+        a.click();
+    })
+
+    document.body.appendChild(canvas);
+</script>
+
+</html>

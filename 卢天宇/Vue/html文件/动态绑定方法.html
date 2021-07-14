@@ -14,7 +14,7 @@
 
 <body>
     <div id="app">
-        <button v-on="{click: xx,dblclick: haha}">点击</button>
+        <button v-on="{click: xx,dblclick: haha}">{{ btnText }}</button>
     </div>
 </body>
 
@@ -23,12 +23,13 @@
         el: '#app',
         data() {
             return {
-
+                btnText: '点击'
             }
         },
         methods: {
             xx() {
                 console.log('xxx');
+                console.log(this)
             },
             haha() {
                 console.log('hahah')
